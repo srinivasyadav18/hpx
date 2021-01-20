@@ -33,6 +33,7 @@ namespace hpx { namespace lcos { namespace detail {
     HPX_FORCEINLINE void transfer_result_impl(
         std::false_type, Source&& src, Destination& dest)
     {
+        hpx::intrusive_ptr<Destination> keep_alive(&dest);
         std::exception_ptr p;
 
         try
@@ -56,6 +57,7 @@ namespace hpx { namespace lcos { namespace detail {
     HPX_FORCEINLINE void transfer_result_impl(
         std::true_type, Source&& src, Destination& dest)
     {
+        hpx::intrusive_ptr<Destination> keep_alive(&dest);
         std::exception_ptr p;
 
         try
@@ -92,6 +94,7 @@ namespace hpx { namespace lcos { namespace detail {
     void invoke_continuation_nounwrap(
         Func& func, Future&& future, Continuation& cont, std::false_type)
     {
+        hpx::intrusive_ptr<Continuation> keep_alive(&cont);
         std::exception_ptr p;
 
         try
@@ -115,7 +118,9 @@ namespace hpx { namespace lcos { namespace detail {
     void invoke_continuation_nounwrap(
         Func& func, Future&& future, Continuation& cont, std::true_type)
     {
+        hpx::intrusive_ptr<Continuation> keep_alive(&cont);
         std::exception_ptr p;
+
         try
         {
             func(std::forward<Future>(future));

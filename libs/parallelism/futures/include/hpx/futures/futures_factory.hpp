@@ -75,6 +75,9 @@ namespace hpx { namespace lcos { namespace local {
         private:
             void do_run_impl(/*is_void=*/std::false_type)
             {
+                using future_base_type = typename Base::future_base_type;
+
+                future_base_type this_(this);
                 std::exception_ptr p;
 
                 try
@@ -96,6 +99,9 @@ namespace hpx { namespace lcos { namespace local {
 
             void do_run_impl(/*is_void=*/std::true_type)
             {
+                using future_base_type = typename Base::future_base_type;
+
+                future_base_type this_(this);
                 std::exception_ptr p;
 
                 try
