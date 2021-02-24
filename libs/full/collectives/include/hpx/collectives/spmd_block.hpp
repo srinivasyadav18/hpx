@@ -19,6 +19,7 @@
 #include <hpx/futures/future.hpp>
 #include <hpx/hashing/jenkins_hash.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
+#include <hpx/runtime_distributed/find_here.hpp>
 #include <hpx/runtime_local/get_locality_id.hpp>
 #include <hpx/serialization/serialize.hpp>
 #include <hpx/type_support/pack.hpp>

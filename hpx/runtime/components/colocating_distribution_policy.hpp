@@ -22,8 +22,8 @@
 #include <hpx/futures/future.hpp>
 #include <hpx/futures/traits/promise_local_result.hpp>
 #include <hpx/naming_base/id_type.hpp>
-#include <hpx/runtime/find_here.hpp>
 #include <hpx/runtime_components/create_component_helpers.hpp>
+#include <hpx/runtime_distributed/find_here.hpp>
 #include <hpx/serialization/serialization_fwd.hpp>
 
 #include <algorithm>

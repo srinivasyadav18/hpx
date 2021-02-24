@@ -29,12 +29,12 @@
 #include <hpx/plugins/binary_filter_factory_base.hpp>
 #include <hpx/plugins/message_handler_factory_base.hpp>
 #include <hpx/prefix/find_prefix.hpp>
-#include <hpx/runtime/runtime_fwd.hpp>
 #include <hpx/runtime_configuration/component_commandline_base.hpp>
 #include <hpx/runtime_configuration/ini.hpp>
 #include <hpx/runtime_configuration/static_factory_data.hpp>
 #include <hpx/runtime_distributed.hpp>
 #include <hpx/runtime_distributed/find_localities.hpp>
+#include <hpx/runtime_distributed/runtime_fwd.hpp>
 #include <hpx/runtime_distributed/server/runtime_support.hpp>
 #include <hpx/runtime_distributed/stubs/runtime_support.hpp>
 #include <hpx/runtime_local/component_startup_shutdown_base.hpp>

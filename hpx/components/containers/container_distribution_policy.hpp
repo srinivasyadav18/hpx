@@ -10,6 +10,7 @@
 #include <hpx/config.hpp>
 #include <hpx/actions_base/traits/is_distribution_policy.hpp>
 #include <hpx/runtime/components/default_distribution_policy.hpp>
+#include <hpx/runtime_distributed/find_here.hpp>
 
 #include <hpx/assert.hpp>
 #include <hpx/serialization/serialize.hpp>

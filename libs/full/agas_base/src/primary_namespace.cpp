@@ -11,6 +11,7 @@
 #include <hpx/agas_base/primary_namespace.hpp>
 #include <hpx/agas_base/server/primary_namespace.hpp>
 #include <hpx/assert.hpp>
+#include <hpx/components_base/agas_interface.hpp>
 #include <hpx/format.hpp>
 #include <hpx/lcos/base_lco_with_value.hpp>
 #include <hpx/modules/async_distributed.hpp>
@@ -139,13 +140,16 @@ namespace hpx { namespace agas {
 
     naming::address primary_namespace::addr() const
     {
-        return naming::address(hpx::get_locality(),
+        return naming::address(
+            naming::get_gid_from_locality_id(agas::get_locality_id()),
             hpx::components::component_agas_primary_namespace, this->ptr());
     }
 
     naming::id_type primary_namespace::gid() const
     {
-        return naming::id_type(get_service_instance(hpx::get_locality()),
+        return naming::id_type(
+            get_service_instance(
+                naming::get_gid_from_locality_id(agas::get_locality_id())),
             naming::id_type::unmanaged);
     }
 
@@ -156,8 +160,8 @@ namespace hpx { namespace agas {
         naming::id_type dest = naming::id_type(
             get_service_instance(id), naming::id_type::unmanaged);
 
-        if (naming::get_locality_from_gid(dest.get_gid()) ==
-            hpx::get_locality())
+        if (naming::get_locality_id_from_gid(dest.get_gid()) ==
+            agas::get_locality_id())
         {
             return hpx::make_ready_future(server_->begin_migration(id));
         }
@@ -173,8 +177,8 @@ namespace hpx { namespace agas {
     }
     bool primary_namespace::end_migration(naming::gid_type const& id)
     {
-        HPX_ASSERT(naming::get_locality_from_gid(get_service_instance(id)) ==
-            hpx::get_locality());
+        HPX_ASSERT(naming::get_locality_id_from_gid(get_service_instance(id)) ==
+            agas::get_locality_id());
 
         return server_->end_migration(id);
     }
@@ -190,8 +194,8 @@ namespace hpx { namespace agas {
     {
         naming::id_type dest = naming::id_type(
             get_service_instance(id), naming::id_type::unmanaged);
-        if (naming::get_locality_from_gid(dest.get_gid()) ==
-            hpx::get_locality())
+        if (naming::get_locality_id_from_gid(dest.get_gid()) ==
+            agas::get_locality_id())
         {
             return hpx::make_ready_future(server_->bind_gid(g, id, locality));
         }
@@ -213,8 +217,8 @@ namespace hpx { namespace agas {
         naming::gid_type const& id = p.destination();
         naming::id_type dest = naming::id_type(
             get_service_instance(id), naming::id_type::unmanaged);
-        if (naming::get_locality_from_gid(dest.get_gid()) ==
-            hpx::get_locality())
+        if (naming::get_locality_id_from_gid(dest.get_gid()) ==
+            agas::get_locality_id())
         {
             hpx::apply(
                 &server::primary_namespace::route, server_.get(), std::move(p));
@@ -242,8 +246,8 @@ namespace hpx { namespace agas {
     {
         naming::id_type dest = naming::id_type(
             get_service_instance(id), naming::id_type::unmanaged);
-        if (naming::get_locality_from_gid(dest.get_gid()) ==
-            hpx::get_locality())
+        if (naming::get_locality_id_from_gid(dest.get_gid()) ==
+            agas::get_locality_id())
         {
             return hpx::make_ready_future(server_->resolve_gid(id));
         }
@@ -260,8 +264,8 @@ namespace hpx { namespace agas {
     {
         naming::id_type dest = naming::id_type(
             get_service_instance(id), naming::id_type::unmanaged);
-        if (naming::get_locality_from_gid(dest.get_gid()) ==
-            hpx::get_locality())
+        if (naming::get_locality_id_from_gid(dest.get_gid()) ==
+            agas::get_locality_id())
         {
             return hpx::make_ready_future(server_->colocate(id));
         }
@@ -280,8 +284,8 @@ namespace hpx { namespace agas {
         naming::id_type dest = naming::id_type(
             get_service_instance(id), naming::id_type::unmanaged);
         naming::gid_type stripped_id = naming::detail::get_stripped_gid(id);
-        if (naming::get_locality_from_gid(dest.get_gid()) ==
-            hpx::get_locality())
+        if (naming::get_locality_id_from_gid(dest.get_gid()) ==
+            agas::get_locality_id())
         {
             return hpx::make_ready_future(
                 server_->unbind_gid(count, stripped_id));
@@ -301,8 +305,8 @@ namespace hpx { namespace agas {
         naming::id_type dest = naming::id_type(
             get_service_instance(id), naming::id_type::unmanaged);
         naming::gid_type stripped_id = naming::detail::get_stripped_gid(id);
-        if (naming::get_locality_from_gid(dest.get_gid()) ==
-            hpx::get_locality())
+        if (naming::get_locality_id_from_gid(dest.get_gid()) ==
+            agas::get_locality_id())
         {
             return server_->unbind_gid(count, stripped_id);
         }
@@ -320,8 +324,8 @@ namespace hpx { namespace agas {
     {
         naming::id_type dest = naming::id_type(
             get_service_instance(lower), naming::id_type::unmanaged);
-        if (naming::get_locality_from_gid(dest.get_gid()) ==
-            hpx::get_locality())
+        if (naming::get_locality_id_from_gid(dest.get_gid()) ==
+            agas::get_locality_id())
         {
             return hpx::make_ready_future(
                 server_->increment_credit(credits, lower, upper));

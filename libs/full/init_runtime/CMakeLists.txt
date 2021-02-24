@@ -28,7 +28,7 @@ set(init_runtime_sources hpx_init.cpp hpx_main_winsocket.cpp init_logging.cpp)
 if(HPX_WITH_DISTRIBUTED_RUNTIME)
   set(init_runtime_headers
       ${init_runtime_headers} hpx/init_runtime/console_logging.hpp
-      hpx/init_runtime/server/console_logging.hpp
+      hpx/init_runtime/pre_main.hpp hpx/init_runtime/server/console_logging.hpp
   )
 
   # cmake-format: off
@@ -39,10 +39,11 @@ if(HPX_WITH_DISTRIBUTED_RUNTIME)
   # cmake-format: on
 
   set(init_runtime_sources ${init_runtime_sources} console_logging.cpp
-                           server/console_logging_server.cpp
+                           pre_main.cpp server/console_logging_server.cpp
   )
   set(init_runtime_optional_module_dependencies
-      hpx_async_distributed hpx_naming hpx_performance_counters
+      hpx_async_distributed hpx_runtime_distributed hpx_naming
+      hpx_performance_counters
   )
 endif()
 

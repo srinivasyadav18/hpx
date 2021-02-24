@@ -9,9 +9,9 @@
 #include <hpx/assert.hpp>
 #include <hpx/components_base/agas_interface.hpp>
 #include <hpx/components_base/detail/agas_interface_functions.hpp>
+#include <hpx/components_base/generate_unique_ids.hpp>
 #include <hpx/components_base/pinned_ptr.hpp>
 #include <hpx/runtime_local/runtime_local.hpp>
-#include <hpx/util/generate_unique_ids.hpp>
 
 #include <algorithm>
 #include <cstddef>

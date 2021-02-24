@@ -13,6 +13,7 @@
 #include <hpx/actions_base/traits/is_distribution_policy.hpp>
 #include <hpx/async_base/launch_policy.hpp>
 #include <hpx/components/client_base.hpp>
+#include <hpx/components_base/agas_interface.hpp>
 #include <hpx/components_base/server/create_component.hpp>
 #include <hpx/components_base/traits/is_component.hpp>
 #include <hpx/futures/future.hpp>
@@ -402,7 +403,8 @@ namespace hpx { namespace components {
         detail::new_component<Component>>::type
     new_(id_type const& locality, Ts&&... vs)
     {
-        if (locality == hpx::find_here())
+        if (naming::get_locality_id_from_id(locality) ==
+            agas::get_locality_id())
         {
             return detail::local_new_component<Component>::call(
                 std::forward<Ts>(vs)...);
@@ -515,7 +517,8 @@ namespace hpx { namespace components {
         detail::new_client<Client>>::type
     new_(id_type const& locality, Ts&&... vs)
     {
-        if (locality == hpx::find_here())
+        if (naming::get_locality_id_from_id(locality) ==
+            agas::get_locality_id())
         {
             return detail::local_new_client<Client>::call(
                 std::forward<Ts>(vs)...);

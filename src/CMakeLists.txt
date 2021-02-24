@@ -24,7 +24,6 @@ if(HPX_WITH_DISTRIBUTED_RUNTIME)
     runtime/agas/server/route.cpp
     runtime/applier/applier.cpp
     runtime/components/binpacking_distribution_policy.cpp
-    runtime/get_locality_name.cpp
     runtime/parcelset/detail/parcel_await.cpp
     runtime/parcelset/detail/parcel_route_handler.cpp
     runtime/parcelset/detail/per_action_data_counter.cpp
@@ -35,9 +34,6 @@ if(HPX_WITH_DISTRIBUTED_RUNTIME)
     runtime/parcelset/put_parcel.cpp
     runtime/set_parcel_write_handler.cpp
     runtime/trigger_lco.cpp
-    runtime_distributed.cpp
-    util/generate_unique_ids.cpp
-    util/pool_timer.cpp
     util/register_locks_globally.cpp
   )
 endif()
@@ -107,17 +103,13 @@ if(HPX_WITH_DISTRIBUTED_RUNTIME)
     hpx/plugins/plugin_factory_base.hpp
     hpx/plugins/plugin_registry.hpp
     hpx/plugins/unique_plugin_name.hpp
-    hpx/runtime_fwd.hpp
     hpx/runtime/actions/lambda_to_action.hpp
+    hpx/runtime/components_fwd.hpp
     hpx/runtime/components/binpacking_distribution_policy.hpp
     hpx/runtime/components/colocating_distribution_policy.hpp
     hpx/runtime/components/default_distribution_policy.hpp
-    hpx/runtime/components_fwd.hpp
     hpx/runtime/components/target_distribution_policy.hpp
     hpx/runtime/components/unwrapping_result_policy.hpp
-    hpx/runtime/find_here.hpp
-    hpx/runtime/find_all_localities.hpp
-    hpx/runtime/get_locality_name.hpp
     hpx/runtime/message_handler_fwd.hpp
     hpx/runtime/parcelset/decode_parcels.hpp
     hpx/runtime/parcelset/detail/call_for_each.hpp
@@ -137,7 +129,6 @@ if(HPX_WITH_DISTRIBUTED_RUNTIME)
     hpx/runtime/parcelset/parcelport_impl.hpp
     hpx/runtime/parcelset/policies/message_handler.hpp
     hpx/runtime/parcelset/put_parcel.hpp
-    hpx/runtime/runtime_fwd.hpp
     hpx/runtime/set_parcel_write_handler.hpp
     hpx/runtime/trigger_lco.hpp
     hpx/runtime/trigger_lco_fwd.hpp
@@ -146,11 +137,7 @@ if(HPX_WITH_DISTRIBUTED_RUNTIME)
     hpx/traits/is_continuation.hpp
     hpx/util/bind_action.hpp
     hpx/util/connection_cache.hpp
-    hpx/util/functional/segmented_iterator_helpers.hpp
-    hpx/util/generate_unique_ids.hpp
-    hpx/util/pool_timer.hpp
     hpx/util/register_locks_globally.hpp
-    hpx/util/remove_local_destinations.hpp
     hpx/util/storage/tuple.hpp
   )
 endif()

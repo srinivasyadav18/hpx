@@ -19,4 +19,5 @@
 #include <hpx/include/naming.hpp>
 #include <hpx/include/parcelset.hpp>
 #include <hpx/runtime_distributed.hpp>
+#include <hpx/modules/runtime_distributed.hpp>
 #endif

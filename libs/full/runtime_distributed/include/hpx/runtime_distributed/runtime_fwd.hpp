@@ -15,9 +15,10 @@
 #if defined(HPX_HAVE_DISTRIBUTED_RUNTIME)
 #include <hpx/components/basename_registration_fwd.hpp>
 #include <hpx/modules/naming_base.hpp>
-#include <hpx/runtime/find_all_localities.hpp>
-#include <hpx/runtime/get_locality_name.hpp>
 #include <hpx/runtime/set_parcel_write_handler.hpp>
+#include <hpx/runtime_distributed/detail/runtime_fwd.hpp>
+#include <hpx/runtime_distributed/find_all_localities.hpp>
+#include <hpx/runtime_distributed/get_locality_name.hpp>
 #include <hpx/runtime_local/get_locality_id.hpp>
 #include <hpx/runtime_local/get_num_all_localities.hpp>
 

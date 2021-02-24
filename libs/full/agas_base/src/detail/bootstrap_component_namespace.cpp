@@ -6,6 +6,7 @@
 
 #include <hpx/agas_base/detail/bootstrap_component_namespace.hpp>
 #include <hpx/assert.hpp>
+#include <hpx/components_base/agas_interface.hpp>
 
 #include <cstdint>
 #include <string>
@@ -15,7 +16,8 @@ namespace hpx { namespace agas { namespace detail {
 
     naming::address bootstrap_component_namespace::addr() const
     {
-        return naming::address(hpx::get_locality(),
+        return naming::address(
+            naming::get_gid_from_locality_id(agas::get_locality_id()),
             components::component_agas_component_namespace, this->ptr());
     }
 

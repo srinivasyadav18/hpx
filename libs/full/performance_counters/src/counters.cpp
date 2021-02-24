@@ -23,7 +23,6 @@
 #include <hpx/performance_counters/counters.hpp>
 #include <hpx/performance_counters/manage_counter_type.hpp>
 #include <hpx/performance_counters/registry.hpp>
-#include <hpx/runtime/runtime_fwd.hpp>
 #include <hpx/runtime_local/get_num_all_localities.hpp>
 #include <hpx/runtime_local/thread_pool_helpers.hpp>
 #include <hpx/serialization/base_object.hpp>

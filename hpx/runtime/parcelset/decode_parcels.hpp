@@ -19,7 +19,8 @@
 #include <hpx/runtime/parcelset/detail/data_point.hpp>
 #include <hpx/runtime/parcelset/detail/parcel_route_handler.hpp>
 #include <hpx/runtime/parcelset/parcel.hpp>
-#include <hpx/runtime_fwd.hpp>
+#include <hpx/runtime_distributed/runtime_fwd.hpp>
+#include <hpx/runtime_local/report_error.hpp>
 #include <hpx/serialization/serialize.hpp>
 #include <hpx/timing/high_resolution_timer.hpp>
 

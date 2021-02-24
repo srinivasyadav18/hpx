@@ -20,8 +20,8 @@
 #include <hpx/modules/threadmanager.hpp>
 #include <hpx/runtime/parcelset/parcel.hpp>
 #include <hpx/runtime/parcelset/parcelhandler.hpp>
-#include <hpx/runtime/runtime_fwd.hpp>
 #include <hpx/runtime_distributed.hpp>
+#include <hpx/runtime_distributed/runtime_fwd.hpp>
 #include <hpx/runtime_local/runtime_local.hpp>
 #include <hpx/threading_base/thread_description.hpp>
 #include <hpx/threading_base/thread_helpers.hpp>

@@ -25,7 +25,7 @@
 #include <hpx/runtime/parcelset/parcelhandler.hpp>
 #include <hpx/runtime/parcelset/put_parcel_fwd.hpp>
 #include <hpx/runtime/parcelset_fwd.hpp>
-#include <hpx/runtime/runtime_fwd.hpp>
+#include <hpx/runtime_distributed/runtime_fwd.hpp>
 #include <hpx/runtime_local/runtime_local.hpp>
 #include <hpx/traits/is_continuation.hpp>
 #include <hpx/type_support/unused.hpp>

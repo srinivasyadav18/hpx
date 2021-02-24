@@ -9,6 +9,7 @@
 #include <hpx/hpx_main.hpp>
 #include <hpx/include/actions.hpp>
 #include <hpx/include/future.hpp>
+#include <hpx/include/runtime.hpp>
 
 struct movable_only
 {
