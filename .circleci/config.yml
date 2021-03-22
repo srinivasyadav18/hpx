@@ -110,6 +110,7 @@ jobs:
               make install
               echo "export Vc_DIR=/opt/Vc" >> $BASH_ENV
               source $BASH_ENV
+              echo "vc dir : $Vc_DIR"
           environment:
               Vc_DIR: /opt/Vc
       - persist_to_workspace:
