@@ -97,22 +97,6 @@ jobs:
                 https://raw.githubusercontent.com/Kitware/CDash/master/app/cdash/tests/circle/conv.xsl \
                 --fail \
                 -o /hpx/conv.xsl
-      - run:
-          name: Installing Vc
-          command: |
-              wget https://github.com/VcDevel/Vc/archive/refs/tags/1.4.1.tar.gz
-              tar -xf 1.4.1.tar.gz
-              cd Vc-1.4.1
-              mkdir build
-              cd build
-              cmake -DCMAKE_INSTALL_PREFIX=/opt/Vc -DBUILD_TESTING=OFF ..
-              make
-              make install
-              echo "export Vc_DIR=/opt/Vc" >> $BASH_ENV
-              source $BASH_ENV
-              echo "vc dir : $Vc_DIR"
-          environment:
-              Vc_DIR: /opt/Vc
       - persist_to_workspace:
           root: /hpx
           paths:
@@ -204,6 +188,22 @@ jobs:
     steps:
       - attach_workspace:
           at: /hpx
+      - run:
+          name: Installing Vc
+          command: |
+              wget https://github.com/VcDevel/Vc/archive/refs/tags/1.4.1.tar.gz
+              tar -xf 1.4.1.tar.gz
+              cd Vc-1.4.1
+              mkdir build
+              cd build
+              cmake -DCMAKE_INSTALL_PREFIX=/opt/Vc -DBUILD_TESTING=OFF ..
+              make
+              make install
+              echo "export Vc_DIR=/opt/Vc" >> $BASH_ENV
+              source $BASH_ENV
+              echo "vc dir : $Vc_DIR"
+          environment:
+              Vc_DIR: /opt/Vc
       - run:
           name: Running CMake
           command: |
