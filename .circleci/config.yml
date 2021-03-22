@@ -108,6 +108,8 @@ jobs:
               cmake -DCMAKE_INSTALL_PREFIX=/opt/Vc -DBUILD_TESTING=OFF ..
               make
               make install
+              echo "export Vc_DIR=/opt/Vc" >> $BASH_ENV
+              source $BASH_ENV
           environment:
               Vc_DIR: /opt/Vc
       - persist_to_workspace:
