@@ -206,7 +206,7 @@ namespace hpx { namespace parallel { namespace util {
                     !iterator_datapar_compatible<InIter1>::value ||
                     !iterator_datapar_compatible<InIter2>::value,
                 std::pair<InIter1, InIter2>>::type
-            call(InIter1 it1, InIter1 last1, InIter2 it2, F&& f)
+            call(InIter1 it1, InIter1 /* last1 */, InIter2 it2, F&& /* f */)
             {
                 return std::make_pair(std::move(it1), std::move(it2));
             }
