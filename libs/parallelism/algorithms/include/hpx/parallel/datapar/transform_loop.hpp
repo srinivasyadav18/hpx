@@ -280,7 +280,8 @@ namespace hpx { namespace parallel { namespace util {
             call(InIter1 first1, InIter1 last1, InIter2 first2, OutIter dest,
                 F&& f)
             {
-                return util::transform_binary_loop<hpx::execution::sequenced_policy>(
+                return util::transform_binary_loop<
+                    hpx::execution::sequenced_policy>(
                     first1, last1, first2, dest, std::forward<F>(f));
             }
 
@@ -319,7 +320,8 @@ namespace hpx { namespace parallel { namespace util {
             call(InIter1 first1, InIter1 last1, InIter2 first2, InIter2 last2,
                 OutIter dest, F&& f)
             {
-                return util::transform_binary_loop<hpx::execution::sequenced_policy>(
+                return util::transform_binary_loop<
+                    hpx::execution::sequenced_policy>(
                     first1, last1, first2, last2, dest, std::forward<F>(f));
             }
         };
