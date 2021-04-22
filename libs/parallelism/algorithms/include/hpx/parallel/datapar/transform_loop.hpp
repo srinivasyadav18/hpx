@@ -155,7 +155,8 @@ namespace hpx { namespace parallel { namespace util {
     HPX_HOST_DEVICE HPX_FORCEINLINE constexpr typename std::enable_if<
         hpx::is_vectorpack_execution_policy<ExPolicy>::value,
         std::pair<Iter, OutIter>>::type
-    transform_loop_n_ind(Iter it, std::size_t count, OutIter dest, F&& f)
+    tag_invoke(hpx::parallel::util::transform_loop_n_ind_t<ExPolicy>,
+        Iter it, std::size_t count, OutIter dest, F&& f)
     {
         return detail::datapar_transform_loop_n_ind<Iter>::call(
             it, count, dest, std::forward<F>(f));
