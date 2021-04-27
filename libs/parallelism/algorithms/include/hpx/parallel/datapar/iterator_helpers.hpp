@@ -498,7 +498,7 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
 
             typedef typename traits::vector_pack_type<value_type, 1>::type V1;
 
-            invoke_vectorized_inout1<V1>::call_aligned(
+            invoke_vectorized_inout1<V1>::call_unaligned(
                 std::forward<F>(f), it, dest);
         }
 
@@ -529,16 +529,9 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
 
             typedef typename traits::vector_pack_type<value_type>::type V;
 
-            if (!is_data_aligned(it) || !is_data_aligned(dest))
-            {
-                invoke_vectorized_inout1<V>::call_unaligned(
-                    std::forward<F>(f), it, dest);
-            }
-            else
-            {
-                invoke_vectorized_inout1<V>::call_aligned(
-                    std::forward<F>(f), it, dest);
-            }
+            HPX_ASSERT(is_data_aligned(it) && is_data_aligned(dest));
+            invoke_vectorized_inout1_ind<V>::call_aligned(
+                std::forward<F>(f), it, dest);
         }
 
         template <typename F, typename InIter1, typename InIter2,
@@ -565,7 +558,6 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
                 invoke_vectorized_inout2<V1, V2>::call_aligned(
                     std::forward<F>(f), it1, it2, dest);
             }
-        }
     };
 
     struct datapar_transform_loop_step_ind
