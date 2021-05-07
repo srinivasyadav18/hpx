@@ -24,6 +24,7 @@ set(config_headers
     hpx/config/endian.hpp
     hpx/config/export_definitions.hpp
     hpx/config/forceinline.hpp
+    hpx/config/lambda_capture_this.hpp
     hpx/config/lambda_capture.hpp
     hpx/config/manual_profiling.hpp
     hpx/config/threads_stack.hpp
