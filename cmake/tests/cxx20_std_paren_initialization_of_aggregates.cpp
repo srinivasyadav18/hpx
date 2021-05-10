@@ -15,5 +15,6 @@ struct S
 int main()
 {
     S(1, 2.0f);
+    (void) S;
     return 0;
 }
