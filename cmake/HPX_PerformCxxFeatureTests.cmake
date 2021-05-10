@@ -125,6 +125,10 @@ function(hpx_perform_cxx_feature_tests)
     DEFINITIONS HPX_HAVE_CXX20_STD_PAREN_INITIALIZATION_OF_AGGREGATES
   )
 
+  hpx_check_for_cxx20_std_experimental_simd(
+    DEFINITIONS HPX_HAVE_CXX20_STD_EXPERIMENTAL_SIMD
+  )
+
   # Check the availability of certain C++ builtins
   hpx_check_for_builtin_integer_pack(DEFINITIONS HPX_HAVE_BUILTIN_INTEGER_PACK)
 
