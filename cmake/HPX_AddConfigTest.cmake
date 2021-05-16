@@ -522,6 +522,15 @@ function(hpx_check_for_cxx20_coroutines)
 endfunction()
 
 # ##############################################################################
+function(hpx_check_for_cxx20_experimental_simd)
+  add_hpx_config_test(
+    HPX_WITH_CXX20_EXPERIMENTAL_SIMD
+    SOURCE cmake/tests/cxx20_experimental_simd.cpp
+    FILE ${ARGN}
+  )
+endfunction()
+
+# ##############################################################################
 function(hpx_check_for_cxx20_lambda_capture)
   add_hpx_config_test(
     HPX_WITH_CXX20_LAMBDA_CAPTURE
@@ -571,15 +580,6 @@ function(hpx_check_for_cxx20_std_execution_policies)
   add_hpx_config_test(
     HPX_WITH_CXX20_STD_EXECUTION_POLICES
     SOURCE cmake/tests/cxx20_std_execution_policies.cpp
-    FILE ${ARGN}
-  )
-endfunction()
-
-# ##############################################################################
-function(hpx_check_for_cxx20_experimental_simd)
-  add_hpx_config_test(
-    HPX_WITH_CXX20_EXPERIMENTAL_SIMD
-    SOURCE cmake/tests/cxx20_experimental_simd.cpp
     FILE ${ARGN}
   )
 endfunction()
