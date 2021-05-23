@@ -27,6 +27,8 @@ set(executors_headers
     hpx/executors/restricted_thread_pool_executor.hpp
     hpx/executors/sequenced_executor.hpp
     hpx/executors/service_executors.hpp
+    hpx/executors/simd/execution_policy_fwd.hpp
+    hpx/executors/simd/execution_policy.hpp
     hpx/executors/std_execution_policy.hpp
     hpx/executors/sync.hpp
     hpx/executors/thread_pool_attached_executors.hpp
@@ -49,6 +51,8 @@ set(executors_compat_headers
     hpx/execution/executors/restricted_thread_pool_executor.hpp => hpx/include/parallel_executors.hpp
     hpx/execution/executors/sequenced_executor.hpp => hpx/include/parallel_executors.hpp
     hpx/execution/executors/thread_pool_attached_executors.hpp => hpx/include/parallel_executors.hpp
+    hpx/execution/simd/execution_policy_fwd.hpp => hpx/include/parallel_executors.hpp
+    hpx/execution/simd/execution_policy.hpp => hpx/include/parallel_executors.hpp
     hpx/parallel/datapar/execution_policy_fwd.hpp => hpx/include/parallel_executors.hpp
     hpx/parallel/datapar/execution_policy.hpp => hpx/include/parallel_executors.hpp
     hpx/parallel/executors.hpp => hpx/include/parallel_executors.hpp
@@ -60,6 +64,8 @@ set(executors_compat_headers
     hpx/parallel/executors/sequenced_executor.hpp => hpx/execution.hpp
     hpx/parallel/executors/thread_pool_attached_executors.hpp => hpx/include/parallel_executors.hpp
     hpx/parallel/executors/thread_pool_executor.hpp => hpx/execution.hpp
+    hpx/parallel/simd/execution_policy_fwd.hpp => hpx/include/parallel_executors.hpp
+    hpx/parallel/simd/execution_policy.hpp => hpx/include/parallel_executors.hpp
 )
 # cmake-format: on
 

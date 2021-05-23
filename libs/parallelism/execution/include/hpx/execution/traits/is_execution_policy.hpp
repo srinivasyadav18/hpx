@@ -44,6 +44,11 @@ namespace hpx {
         struct is_vectorpack_execution_policy : std::false_type
         {
         };
+
+        template <typename Executor>
+        struct is_simdpack_execution_policy : std::false_type
+        {
+        };
         /// \endcond
     }    // namespace detail
 
@@ -165,6 +170,16 @@ namespace hpx {
     template <typename T>
     HPX_INLINE_CONSTEXPR_VARIABLE bool is_vectorpack_execution_policy_v =
         is_vectorpack_execution_policy<T>::value;
+
+    template <typename T>
+    struct is_simdpack_execution_policy
+      : hpx::detail::is_simdpack_execution_policy<typename std::decay<T>::type>
+    {
+    };
+
+    template <typename T>
+    HPX_INLINE_CONSTEXPR_VARIABLE bool is_simdpack_execution_policy_v =
+        is_simdpack_execution_policy<T>::value;
     /// \endcond
 }    // namespace hpx
 

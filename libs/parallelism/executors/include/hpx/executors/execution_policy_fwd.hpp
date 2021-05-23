@@ -11,6 +11,10 @@
 #include <hpx/executors/datapar/execution_policy_fwd.hpp>
 #endif
 
+#if defined(HPX_HAVE_CXX20_EXPERIMENTAL_SIMD)
+#include <hpx/executors/simd/execution_policy_fwd.hpp>
+#endif
+
 namespace hpx { namespace execution {
     ///////////////////////////////////////////////////////////////////////////
     // forward declarations, see execution_policy.hpp
