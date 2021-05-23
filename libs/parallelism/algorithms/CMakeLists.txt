@@ -130,6 +130,11 @@ set(algorithms_headers
     hpx/parallel/datapar/zip_iterator.hpp
     hpx/parallel/memory.hpp
     hpx/parallel/numeric.hpp
+    hpx/parallel/simd.hpp
+    hpx/parallel/simd/iterator_helpers.hpp
+    hpx/parallel/simd/loop.hpp
+    hpx/parallel/simd/transform_loop.hpp
+    hpx/parallel/simd/zip_iterator.hpp
     hpx/parallel/spmd_block.hpp
     hpx/parallel/tagspec.hpp
     hpx/parallel/task_block.hpp
