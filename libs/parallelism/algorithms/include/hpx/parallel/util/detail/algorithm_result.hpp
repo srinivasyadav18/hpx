@@ -244,6 +244,61 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
     };
 #endif
 
+#if defined(HPX_HAVE_CXX20_EXPERIMENTAL_SIMD)
+    ///////////////////////////////////////////////////////////////////////////
+    template <typename T>
+    struct algorithm_result_impl<hpx::execution::simd_task_policy, T>
+      : algorithm_result_impl<hpx::execution::sequenced_task_policy, T>
+    {
+    };
+
+    template <>
+    struct algorithm_result_impl<hpx::execution::simd_task_policy, void>
+      : algorithm_result_impl<hpx::execution::sequenced_task_policy, void>
+    {
+    };
+
+    template <typename Executor, typename Parameters, typename T>
+    struct algorithm_result_impl<
+        hpx::execution::simd_task_policy_shim<Executor, Parameters>, T>
+      : algorithm_result_impl<hpx::execution::sequenced_task_policy, T>
+    {
+    };
+
+    template <typename Executor, typename Parameters>
+    struct algorithm_result_impl<
+        hpx::execution::simd_task_policy_shim<Executor, Parameters>, void>
+      : algorithm_result_impl<hpx::execution::sequenced_task_policy, void>
+    {
+    };
+
+    template <typename T>
+    struct algorithm_result_impl<hpx::execution::simdpar_task_policy, T>
+      : algorithm_result_impl<hpx::execution::parallel_task_policy, T>
+    {
+    };
+
+    template <>
+    struct algorithm_result_impl<hpx::execution::simdpar_task_policy, void>
+      : algorithm_result_impl<hpx::execution::parallel_task_policy, void>
+    {
+    };
+
+    template <typename Executor, typename Parameters, typename T>
+    struct algorithm_result_impl<
+        hpx::execution::simdpar_task_policy_shim<Executor, Parameters>, T>
+      : algorithm_result_impl<hpx::execution::parallel_task_policy, T>
+    {
+    };
+
+    template <typename Executor, typename Parameters>
+    struct algorithm_result_impl<
+        hpx::execution::simdpar_task_policy_shim<Executor, Parameters>, void>
+      : algorithm_result_impl<hpx::execution::parallel_task_policy, void>
+    {
+    };
+#endif
+
     ///////////////////////////////////////////////////////////////////////////
     template <typename ExPolicy, typename T = void>
     struct algorithm_result
