@@ -9,6 +9,8 @@
 #include <hpx/config.hpp>
 #include <hpx/algorithms/traits/segmented_iterator_traits.hpp>
 #include <hpx/execution/traits/is_execution_policy.hpp>
+#include <hpx/execution/traits/simd_pack_load_store.hpp>
+#include <hpx/execution/traits/simd_pack_type.hpp>
 #include <hpx/execution/traits/vector_pack_load_store.hpp>
 #include <hpx/execution/traits/vector_pack_type.hpp>
 #include <hpx/functional/invoke_result.hpp>
@@ -95,6 +97,34 @@ namespace hpx { namespace parallel { namespace traits {
             typename hpx::util::always_void<
                 typename Projected::iterator_type>::type>
           : projected_result_of_vector_pack_<typename Projected::projector_type,
+                typename std::iterator_traits<
+                    typename Projected::iterator_type>::value_type>
+        {
+        };
+#endif
+
+#if defined(HPX_HAVE_CXX20_EXPERIMENTAL_SIMD)
+        // This is being instantiated if a simd pack execution policy is used
+        // with a zip_iterator. In this case the function object is invoked
+        // with a tuple<datapar<T>...> instead of just a tuple<T...>
+        template <typename Proj, typename ValueType, typename Enable = void>
+        struct projected_result_of_simd_pack_
+          : hpx::util::invoke_result<Proj,
+                typename hpx::parallel::traits::simd_pack_load<
+                    typename hpx::parallel::traits::simd_pack_type<
+                        ValueType>::type,
+                    ValueType>::value_type&>
+        {
+        };
+
+        template <typename Projected, typename Enable = void>
+        struct projected_result_of_simd_pack;
+
+        template <typename Projected>
+        struct projected_result_of_simd_pack<Projected,
+            typename hpx::util::always_void<
+                typename Projected::iterator_type>::type>
+          : projected_result_of_simd_pack_<typename Projected::projector_type,
                 typename std::iterator_traits<
                     typename Projected::iterator_type>::value_type>
         {
@@ -202,7 +232,7 @@ namespace hpx { namespace parallel { namespace traits {
         struct is_indirect_callable<ExPolicy, F, hpx::util::pack<Projected...>,
             typename std::enable_if<
                 hpx::util::all_of<is_projected_indirect<Projected>...>::value &&
-                (!hpx::is_vectorpack_execution_policy<ExPolicy>::value ||
+                (!hpx::is_simdpack_execution_policy<ExPolicy>::value ||
                     !hpx::util::all_of<
                         is_projected_zip_iterator<Projected>...>::value)>::type>
           : is_indirect_callable_impl<F,
@@ -223,6 +253,23 @@ namespace hpx { namespace parallel { namespace traits {
                     is_projected_zip_iterator<Projected>...>::value>::type>
           : is_indirect_callable_impl<F,
                 typename projected_result_of_vector_pack<Projected>::type...>
+        {
+        };
+#endif
+
+#if defined(HPX_HAVE_CXX20_EXPERIMENTAL_SIMD)
+        // Simd pack execution policies used with zip-iterators require
+        // special handling because zip_iterator<>::reference is not a real
+        // reference type.
+        template <typename ExPolicy, typename F, typename... Projected>
+        struct is_indirect_callable<ExPolicy, F, hpx::util::pack<Projected...>,
+            typename std::enable_if<
+                hpx::util::all_of<is_projected_indirect<Projected>...>::value &&
+                hpx::is_simdpack_execution_policy<ExPolicy>::value &&
+                hpx::util::all_of<
+                    is_projected_zip_iterator<Projected>...>::value>::type>
+          : is_indirect_callable_impl<F,
+                typename projected_result_of_simd_pack<Projected>::type...>
         {
         };
 #endif
