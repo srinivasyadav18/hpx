@@ -178,6 +178,21 @@ namespace hpx { namespace parallel { inline namespace v1 {
         };
 #endif
 
+#if defined(HPX_HAVE_CXX20_EXPERIMENTAL_SIMD)
+        ///////////////////////////////////////////////////////////////////////
+        template <typename Result>
+        struct handle_exception_impl<hpx::execution::simd_task_policy, Result>
+          : handle_exception_task_impl<Result>
+        {
+        };
+
+        template <typename Result>
+        struct handle_exception_impl<hpx::execution::simdpar_task_policy,
+            Result> : handle_exception_task_impl<Result>
+        {
+        };
+#endif
+
         using exception_list_termination_handler_type =
             hpx::util::function_nonser<void()>;
 
