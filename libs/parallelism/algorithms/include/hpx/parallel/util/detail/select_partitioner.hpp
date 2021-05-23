@@ -56,4 +56,16 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
             TaskPartitioner<hpx::execution::datapar_task_policy, Args...>;
     };
 #endif
+
+#if defined(HPX_HAVE_CXX20_EXPERIMENTAL_SIMD)
+    template <template <typename...> class Partitioner,
+        template <typename...> class TaskPartitioner>
+    struct select_partitioner<hpx::execution::simdpar_task_policy, Partitioner,
+        TaskPartitioner>
+    {
+        template <typename... Args>
+        using apply =
+            TaskPartitioner<hpx::execution::simdpar_task_policy, Args...>;
+    };
+#endif
 }}}}    // namespace hpx::parallel::util::detail
