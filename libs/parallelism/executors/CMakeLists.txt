@@ -31,7 +31,6 @@ set(executors_headers
     hpx/executors/simd/execution_policy.hpp
     hpx/executors/std_execution_policy.hpp
     hpx/executors/sync.hpp
-    hpx/executors/thread_pool_attached_executors.hpp
     hpx/executors/thread_pool_executor.hpp
 )
 
@@ -62,7 +61,6 @@ set(executors_compat_headers
     hpx/parallel/executors/parallel_executor.hpp => hpx/execution.hpp
     hpx/parallel/executors/parallel_executor_aggregated.hpp => hpx/include/parallel_executors.hpp
     hpx/parallel/executors/sequenced_executor.hpp => hpx/execution.hpp
-    hpx/parallel/executors/thread_pool_attached_executors.hpp => hpx/include/parallel_executors.hpp
     hpx/parallel/executors/thread_pool_executor.hpp => hpx/execution.hpp
     hpx/parallel/simd/execution_policy_fwd.hpp => hpx/include/parallel_executors.hpp
     hpx/parallel/simd/execution_policy.hpp => hpx/include/parallel_executors.hpp
