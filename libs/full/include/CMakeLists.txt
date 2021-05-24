@@ -96,6 +96,7 @@ set(include_headers
     hpx/include/run_as.hpp
     hpx/include/runtime.hpp
     hpx/include/serialization.hpp
+    hpx/include/simd.hpp
     hpx/include/sync.hpp
     hpx/include/threadmanager.hpp
     hpx/include/threads.hpp

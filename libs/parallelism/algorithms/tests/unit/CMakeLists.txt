@@ -11,7 +11,7 @@ if(HPX_WITH_DATAPAR_VC)
   set(subdirs ${subdirs} datapar_algorithms)
 endif()
 
-if (HPX_WITH_CXX20_EXPERIMENTAL_SIMD)
+if(HPX_WITH_CXX20_EXPERIMENTAL_SIMD)
   set(subdirs ${subdirs} simd_algorithms)
 endif()
 

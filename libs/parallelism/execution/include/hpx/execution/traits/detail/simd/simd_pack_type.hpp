@@ -14,6 +14,7 @@
 #include <experimental/simd>
 
 #include <cstddef>
+#include <type_traits>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace hpx { namespace parallel { namespace traits {
