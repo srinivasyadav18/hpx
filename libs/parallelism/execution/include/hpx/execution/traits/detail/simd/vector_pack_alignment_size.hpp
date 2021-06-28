@@ -66,6 +66,13 @@ namespace hpx { namespace parallel { namespace traits {
             std::experimental::native_simd<T>>;
     };
 
+    template <typename T>
+    struct vector_pack_alignment<std::experimental::native_simd<T>>
+    {
+        static std::size_t const value = std::experimental::memory_alignment_v<
+            std::experimental::native_simd<T>>;
+    };
+
     template <typename T, typename Abi>
     struct vector_pack_alignment<std::experimental::simd<T, Abi>>
     {
@@ -93,6 +100,13 @@ namespace hpx { namespace parallel { namespace traits {
     ///////////////////////////////////////////////////////////////////////////
     template <typename T, typename Enable>
     struct vector_pack_size
+    {
+        static std::size_t const value =
+            std::experimental::native_simd<T>::size();
+    };
+
+    template <typename T>
+    struct vector_pack_size<std::experimental::native_simd<T>>
     {
         static std::size_t const value =
             std::experimental::native_simd<T>::size();
