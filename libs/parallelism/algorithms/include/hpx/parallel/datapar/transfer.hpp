@@ -18,6 +18,7 @@
 #include <hpx/functional/tag_dispatch.hpp>
 #include <hpx/parallel/datapar/transform_loop.hpp>
 #include <hpx/parallel/util/result_types.hpp>
+#include <hpx/parallel/util/transfer.hpp>
 
 namespace hpx { namespace parallel { namespace util {
 
@@ -34,9 +35,10 @@ namespace hpx { namespace parallel { namespace util {
                 in_out_result<InIter, OutIter>>::type
             call(InIter first, std::size_t count, OutIter dest)
             {
-                auto ret = util::transform_loop_n_ind<hpx::execution::simd_policy>(
-                    first, count, dest, [](auto &v){return v;});
-                
+                auto ret =
+                    util::transform_loop_n_ind<hpx::execution::simd_policy>(
+                        first, count, dest, [](auto& v) { return v; });
+
                 return util::in_out_result<InIter, OutIter>{
                     std::move(ret.first), std::move(ret.second)};
             }
@@ -53,17 +55,16 @@ namespace hpx { namespace parallel { namespace util {
                     first, count, dest);
             }
         };
-    }
+    }    // namespace detail
 
     template <typename ExPolicy, typename InIter, typename OutIter>
     HPX_HOST_DEVICE HPX_FORCEINLINE typename std::enable_if<
         hpx::is_vectorpack_execution_policy<ExPolicy>::value,
         in_out_result<InIter, OutIter>>::type
-    tag_dispatch(hpx::parallel::util::copy_n_t<ExPolicy>,
-        InIter first, std::size_t count, OutIter dest)
+    tag_dispatch(hpx::parallel::util::copy_n_t<ExPolicy>, InIter first,
+        std::size_t count, OutIter dest)
     {
-        return detail::datapar_copy_n<InIter>::call(
-            first, count, dest);
+        return detail::datapar_copy_n<InIter>::call(first, count, dest);
     }
-}}}
+}}}    // namespace hpx::parallel::util
 #endif
