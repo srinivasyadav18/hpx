@@ -25,10 +25,9 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
     struct datapar_fill
     {
         template <typename ExPolicy, typename Iter, typename Sent, typename T>
-        HPX_HOST_DEVICE HPX_FORCEINLINE static
-            typename std::enable_if<util::detail::iterator_datapar_compatible<Iter>::value,
-                Iter>::type
-            call(ExPolicy&& policy, Iter first, Sent last, T const& val)
+        HPX_HOST_DEVICE HPX_FORCEINLINE static typename std::enable_if<
+            util::detail::iterator_datapar_compatible<Iter>::value, Iter>::type
+        call(ExPolicy&& policy, Iter first, Sent last, T const& val)
         {
             hpx::parallel::util::loop_ind(std::forward<ExPolicy>(policy), first,
                 last, [&val](auto& v) { v = val; });
@@ -36,10 +35,9 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
         }
 
         template <typename ExPolicy, typename Iter, typename Sent, typename T>
-        HPX_HOST_DEVICE HPX_FORCEINLINE static
-            typename std::enable_if<!util::detail::iterator_datapar_compatible<Iter>::value,
-                Iter>::type
-            call(ExPolicy&&, Iter first, Sent last, T const& value)
+        HPX_HOST_DEVICE HPX_FORCEINLINE static typename std::enable_if<
+            !util::detail::iterator_datapar_compatible<Iter>::value, Iter>::type
+        call(ExPolicy&&, Iter first, Sent last, T const& value)
         {
             return sequential_fill_helper(first, last, value);
         }
@@ -59,11 +57,9 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
     struct datapar_fill_n
     {
         template <typename ExPolicy, typename Iter, typename T>
-        HPX_HOST_DEVICE HPX_FORCEINLINE static
-            typename std::enable_if<util::detail::iterator_datapar_compatible<Iter>::value,
-                Iter>::type
-            call(ExPolicy&&, Iter first, std::size_t count,
-                T const& val)
+        HPX_HOST_DEVICE HPX_FORCEINLINE static typename std::enable_if<
+            util::detail::iterator_datapar_compatible<Iter>::value, Iter>::type
+        call(ExPolicy&&, Iter first, std::size_t count, T const& val)
         {
             hpx::parallel::util::loop_n_ind<std::decay_t<ExPolicy>>(
                 first, count, [&val](auto& v) { v = val; });
@@ -71,10 +67,9 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
         }
 
         template <typename ExPolicy, typename Iter, typename T>
-        HPX_HOST_DEVICE HPX_FORCEINLINE static
-            typename std::enable_if<!util::detail::iterator_datapar_compatible<Iter>::value,
-                Iter>::type
-            call(ExPolicy&&, Iter first, std::size_t count, T const& value)
+        HPX_HOST_DEVICE HPX_FORCEINLINE static typename std::enable_if<
+            !util::detail::iterator_datapar_compatible<Iter>::value, Iter>::type
+        call(ExPolicy&&, Iter first, std::size_t count, T const& value)
         {
             return sequential_fill_n_helper(first, count, value);
         }

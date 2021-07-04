@@ -516,7 +516,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
             static constexpr Iter sequential(
                 ExPolicy, Iter first, Sent last, F&& f, Proj&& proj = Proj())
             {
-                return sequential_find_if(
+                return sequential_find_if<ExPolicy>(
                     first, last, std::forward<F>(f), std::forward<Proj>(proj));
             }
 
@@ -621,7 +621,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
             static constexpr Iter sequential(
                 ExPolicy, Iter first, Sent last, F&& f, Proj&& proj = Proj())
             {
-                return sequential_find_if_not(
+                return sequential_find_if_not<ExPolicy>(
                     first, last, std::forward<F>(f), std::forward<Proj>(proj));
             }
 

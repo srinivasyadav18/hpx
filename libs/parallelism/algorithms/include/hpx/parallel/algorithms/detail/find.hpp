@@ -9,7 +9,13 @@
 
 #include <hpx/config.hpp>
 #include <hpx/functional/invoke.hpp>
+#include <hpx/functional/tag_fallback_dispatch.hpp>
+#include <hpx/parallel/util/loop.hpp>
 #include <hpx/parallel/util/projection_identity.hpp>
+#include <hpx/execution/traits/is_execution_policy.hpp>
+
+#include <type_traits>
+#include <iostream>
 
 namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
 
@@ -30,34 +36,136 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
     }
 
     // provide implementation of std::find_if supporting iterators/sentinels
-    template <typename Iterator, typename Sentinel, typename Pred,
-        typename Proj = util::projection_identity>
-    inline constexpr Iterator sequential_find_if(
-        Iterator first, Sentinel last, Pred pred, Proj proj = Proj())
+    template <typename ExPolicy>
+    struct sequential_find_if_t : 
+      hpx::functional::tag_fallback<sequential_find_if_t<ExPolicy>>
     {
-        for (; first != last; ++first)
+    private:
+        template <typename Iterator, typename Sentinel, typename Pred,
+            typename Proj = util::projection_identity>
+        friend inline constexpr Iterator tag_fallback_dispatch(
+            hpx::parallel::detail::sequential_find_if_t<ExPolicy>,
+            Iterator first, Sentinel last, Pred pred, Proj proj = Proj())
         {
-            if (hpx::util::invoke(pred, hpx::util::invoke(proj, *first)))
+            for (; first != last; ++first)
             {
-                return first;
+                if (hpx::util::invoke(pred, hpx::util::invoke(proj, *first)))
+                {
+                    return first;
+                }
             }
+            return first;
         }
-        return first;
+
+        template <typename FwdIter, typename Token,
+            typename F, typename Proj>
+        friend inline constexpr void tag_fallback_dispatch(
+            hpx::parallel::detail::sequential_find_if_t<ExPolicy>,
+            FwdIter part_begin, std::size_t part_count, Token &tok, 
+                F&& op, Proj&& proj)
+        {
+            util::loop_n<std::decay_t<ExPolicy>>(part_begin, part_count,
+                tok, [&op, &tok, &proj](auto const& curr) {
+                    if (hpx::util::invoke(
+                            op, hpx::util::invoke(proj, *curr)))
+                    {
+                        tok.cancel();
+                    }
+                });
+        }
+    };
+
+#if !defined(HPX_COMPUTE_DEVICE_CODE)
+    template <typename ExPolicy>
+    HPX_INLINE_CONSTEXPR_VARIABLE sequential_find_if_t<ExPolicy>
+        sequential_find_if = sequential_find_if_t<ExPolicy>{};
+#else
+    template <typename ExPolicy, typename Iterator, typename Sentinel,
+        typename Pred, typename Proj = util::projection_identity>
+    inline constexpr Iterator
+    sequential_find_if(Iterator first, Sentinel last, Pred pred,
+            Proj proj = Proj())
+    {
+        return hpx::parallel::detail::sequential_find_if_t<ExPolicy>{}(
+            first, last, pred, proj);
     }
 
-    // provide implementation of std::find_if supporting iterators/sentinels
-    template <typename Iterator, typename Sentinel, typename Pred,
-        typename Proj = util::projection_identity>
-    inline constexpr Iterator sequential_find_if_not(
-        Iterator first, Sentinel last, Pred pred, Proj proj = Proj())
+    template <typename ExPolicy, typename FwdIter, typename Token, 
+        typename F, typename Proj>
+    inline constexpr void
+    sequential_find_if(FwdIter part_begin, std::size_t part_count, Token &tok, 
+            F&& op, Proj&& proj)
     {
-        for (; first != last; ++first)
-        {
-            if (!hpx::util::invoke(pred, hpx::util::invoke(proj, *first)))
-            {
-                return first;
-            }
-        }
-        return first;
+        return hpx::parallel::detail::sequential_find_if_t<ExPolicy>{}(
+            part_begin, part_count, tok, std::forward<F>(op),
+            std::forward<Proj>(proj));
     }
+#endif
+
+    // provide implementation of std::find_if_not supporting iterators/sentinels
+    template <typename ExPolicy>
+    struct sequential_find_if_not_t : 
+      hpx::functional::tag_fallback<sequential_find_if_not_t<ExPolicy>>
+    {
+    private:
+        template <typename Iterator, typename Sentinel, typename Pred,
+            typename Proj = util::projection_identity>
+        friend inline constexpr Iterator tag_fallback_dispatch(
+            hpx::parallel::detail::sequential_find_if_not_t<ExPolicy>,
+            Iterator first, Sentinel last, Pred pred, Proj proj = Proj())
+        {
+            for (; first != last; ++first)
+            {
+                if (!hpx::util::invoke(pred, hpx::util::invoke(proj, *first)))
+                {
+                    return first;
+                }
+            }
+            return first;
+        }
+
+        template <typename FwdIter, typename Token,
+            typename F, typename Proj>
+        friend inline constexpr void tag_fallback_dispatch(
+            hpx::parallel::detail::sequential_find_if_not_t<ExPolicy>,
+            FwdIter part_begin, std::size_t part_count, Token &tok, 
+                F&& op, Proj&& proj)
+        {
+            util::loop_n<std::decay_t<ExPolicy>>(part_begin, part_count,
+                tok, [&op, &tok, &proj](auto const& curr) {
+                    if (!hpx::util::invoke(
+                            op, hpx::util::invoke(proj, *curr)))
+                    {
+                        tok.cancel();
+                    }
+                });
+        }
+    };
+
+#if !defined(HPX_COMPUTE_DEVICE_CODE)
+    template <typename ExPolicy>
+    HPX_INLINE_CONSTEXPR_VARIABLE sequential_find_if_not_t<ExPolicy>
+        sequential_find_if_not = sequential_find_if_not_t<ExPolicy>{};
+#else
+    template <typename ExPolicy, typename Iterator, typename Sentinel,
+        typename Pred, typename Proj = util::projection_identity>
+    inline constexpr Iterator
+    sequential_find_if_not(Iterator first, Sentinel last, Pred pred,
+            Proj proj = Proj())
+    {
+        return hpx::parallel::detail::sequential_find_if_not_t<ExPolicy>{}(
+            first, last, pred, proj);
+    }
+
+    template <typename ExPolicy, typename FwdIter, typename Token, 
+        typename F, typename Proj>
+    inline constexpr void
+    sequential_find_if_not(FwdIter part_begin, std::size_t part_count, Token &tok, 
+            F&& op, Proj&& proj)
+    {
+        return hpx::parallel::detail::sequential_find_if_not_t<ExPolicy>{}(
+            part_begin, part_count, tok, std::forward<F>(op),
+            std::forward<Proj>(proj));
+    }
+#endif
 }}}}    // namespace hpx::parallel::v1::detail

@@ -210,23 +210,21 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
         typedef typename traits::vector_pack_type<value_type>::type V;
 
         template <typename F>
-        HPX_HOST_DEVICE HPX_FORCEINLINE static
-            typename hpx::util::invoke_result<F, V1*>::type
-            call1(F&& f, Iter& it)
+        HPX_HOST_DEVICE HPX_FORCEINLINE static void call1(F&& f, Iter& it)
         {
-            store_on_exit_unaligned<Iter, V1> tmp(it);
+            V1 tmp(traits::vector_pack_load<V1, value_type>::aligned(it));
+            HPX_INVOKE(f, &tmp);
+            traits::vector_pack_store<V1, value_type>::aligned(tmp, it);
             ++it;
-            return HPX_INVOKE(f, &tmp);
         }
 
         template <typename F>
-        HPX_HOST_DEVICE HPX_FORCEINLINE static
-            typename hpx::util::invoke_result<F, V*>::type
-            callv(F&& f, Iter& it)
+        HPX_HOST_DEVICE HPX_FORCEINLINE static void callv(F&& f, Iter& it)
         {
-            store_on_exit<Iter, V> tmp(it);
+            V tmp(traits::vector_pack_load<V, value_type>::aligned(it));
+            HPX_INVOKE(f, &tmp);
+            traits::vector_pack_store<V, value_type>::aligned(tmp, it);
             std::advance(it, traits::vector_pack_size<V>::value);
-            return HPX_INVOKE(f, &tmp);
         }
     };
 
