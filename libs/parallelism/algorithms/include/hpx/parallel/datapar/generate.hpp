@@ -12,7 +12,7 @@
 #include <hpx/execution/traits/is_execution_policy.hpp>
 #include <hpx/functional/tag_dispatch.hpp>
 #include <hpx/parallel/algorithms/detail/generate.hpp>
-#include <hpx/parallel/datapar/transform_loop.hpp>
+#include <hpx/parallel/datapar/loop.hpp>
 #include <hpx/parallel/util/result_types.hpp>
 
 #include <cstddef>
@@ -24,22 +24,20 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
     ///////////////////////////////////////////////////////////////////////////
     struct datapar_generate
     {
-        template <typename Iter, typename Sent, typename F>
-        HPX_HOST_DEVICE HPX_FORCEINLINE static
-            typename std::enable_if<iterator_datapar_compatible<Iter>::value,
-                Iter>::type
-            call(ExPolicy&& Policy, Iter first, Sent last, F&& f)
+        template <typename ExPolicy, typename Iter, typename Sent, typename F>
+        HPX_HOST_DEVICE HPX_FORCEINLINE static typename std::enable_if<
+            util::detail::iterator_datapar_compatible<Iter>::value, Iter>::type
+        call(ExPolicy&& policy, Iter first, Sent last, F&& f)
         {
             hpx::parallel::util::loop_ind(std::forward<ExPolicy>(policy), first,
                 last, [f = std::forward<F>(f)](auto& v) mutable { v = f(); });
             return first;
         }
 
-        template <typename Iter, typename Sent, typename F>
-        HPX_HOST_DEVICE HPX_FORCEINLINE static
-            typename std::enable_if<!iterator_datapar_compatible<Iter>::value,
-                Iter>::type
-            call(ExPolicy&&, Iter first, Sent last, F&& f)
+        template <typename ExPolicy, typename Iter, typename Sent, typename F>
+        HPX_HOST_DEVICE HPX_FORCEINLINE static typename std::enable_if<
+            !util::detail::iterator_datapar_compatible<Iter>::value, Iter>::type
+        call(ExPolicy&&, Iter first, Sent last, F&& f)
         {
             return sequential_generate_helper(first, last, std::forward<F>(f));
         }
@@ -58,23 +56,20 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
     ///////////////////////////////////////////////////////////////////////////
     struct datapar_generate_n
     {
-        template <typename Iter, typename F>
-        HPX_HOST_DEVICE HPX_FORCEINLINE static
-            typename std::enable_if<iterator_datapar_compatible<Iter>::value,
-                Iter>::type
-            call(ExPolicy&& Policy, Iter first, std::size_t count, F&& f)
+        template <typename ExPolicy, typename Iter, typename F>
+        HPX_HOST_DEVICE HPX_FORCEINLINE static typename std::enable_if<
+            util::detail::iterator_datapar_compatible<Iter>::value, Iter>::type
+        call(ExPolicy&&, Iter first, std::size_t count, F&& f)
         {
-            hpx::parallel::util::loop_n_ind(std::forward<ExPolicy>(policy),
-                first, count,
-                [f = std::forward<F>(f)](auto& v) mutable { v = f(); });
+            hpx::parallel::util::loop_n_ind<std::decay_t<ExPolicy>>(first,
+                count, [f = std::forward<F>(f)](auto& v) mutable { v = f(); });
             return first;
         }
 
-        template <typename Iter, typename F>
-        HPX_HOST_DEVICE HPX_FORCEINLINE static
-            typename std::enable_if<!iterator_datapar_compatible<Iter>::value,
-                Iter>::type
-            call(ExPolicy&&, Iter first, std::size_t count, F&& f)
+        template <typename ExPolicy, typename Iter, typename F>
+        HPX_HOST_DEVICE HPX_FORCEINLINE static typename std::enable_if<
+            !util::detail::iterator_datapar_compatible<Iter>::value, Iter>::type
+        call(ExPolicy&&, Iter first, std::size_t count, F&& f)
         {
             return sequential_generate_n_helper(
                 first, count, std::forward<F>(f));
