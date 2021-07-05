@@ -484,14 +484,9 @@ namespace hpx { namespace parallel { inline namespace v1 {
                               proj = std::forward<Proj>(proj)](
                               FwdIter part_begin,
                               std::size_t part_count) mutable -> bool {
-                    util::loop_n<std::decay_t<ExPolicy>>(part_begin, part_count,
-                        tok, [&op, &tok, &proj](FwdIter const& curr) {
-                            if (!hpx::util::invoke(
-                                    op, hpx::util::invoke(proj, *curr)))
-                            {
-                                tok.cancel();
-                            }
-                        });
+                    detail::sequential_find_if_not<std::decay_t<ExPolicy>>(
+                        part_begin, part_count, tok, std::forward<F>(op),
+                        std::forward<Proj>(proj));
 
                     return !tok.was_cancelled();
                 };

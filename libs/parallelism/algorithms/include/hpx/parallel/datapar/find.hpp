@@ -71,8 +71,8 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
         typename Pred, typename Proj = util::projection_identity>
     inline constexpr std::enable_if_t<
         hpx::is_vectorpack_execution_policy<ExPolicy>::value, Iterator>
-    tag_dispatch(hpx::parallel::detail::sequential_find_if_t<ExPolicy>,
-        Iterator first, Sentinel last, Pred pred, Proj proj = Proj())
+    tag_dispatch(sequential_find_if_t<ExPolicy>, Iterator first, Sentinel last,
+        Pred pred, Proj proj = Proj())
     {
         return datapar_find_if<ExPolicy>::call(first, last, pred, proj);
     }
@@ -81,9 +81,8 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
         typename Proj>
     inline constexpr std::enable_if_t<
         hpx::is_vectorpack_execution_policy<ExPolicy>::value, void>
-    tag_dispatch(hpx::parallel::detail::sequential_find_if_t<ExPolicy>,
-        FwdIter part_begin, std::size_t part_count, Token& tok, F&& op,
-        Proj&& proj)
+    tag_dispatch(sequential_find_if_t<ExPolicy>, FwdIter part_begin,
+        std::size_t part_count, Token& tok, F&& op, Proj&& proj)
     {
         return datapar_find_if<ExPolicy>::call(part_begin, part_count, tok,
             std::forward<F>(op), std::forward<Proj>(proj));
@@ -137,8 +136,8 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
         typename Pred, typename Proj = util::projection_identity>
     inline constexpr std::enable_if_t<
         hpx::is_vectorpack_execution_policy<ExPolicy>::value, Iterator>
-    tag_dispatch(hpx::parallel::detail::sequential_find_if_not_t<ExPolicy>,
-        Iterator first, Sentinel last, Pred pred, Proj proj = Proj())
+    tag_dispatch(sequential_find_if_not_t<ExPolicy>, Iterator first,
+        Sentinel last, Pred pred, Proj proj = Proj())
     {
         return datapar_find_if_not<ExPolicy>::call(first, last, pred, proj);
     }
@@ -147,9 +146,8 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
         typename Proj>
     inline constexpr std::enable_if_t<
         hpx::is_vectorpack_execution_policy<ExPolicy>::value, void>
-    tag_dispatch(hpx::parallel::detail::sequential_find_if_not_t<ExPolicy>,
-        FwdIter part_begin, std::size_t part_count, Token& tok, F&& op,
-        Proj&& proj)
+    tag_dispatch(sequential_find_if_not_t<ExPolicy>, FwdIter part_begin,
+        std::size_t part_count, Token& tok, F&& op, Proj&& proj)
     {
         return datapar_find_if_not<ExPolicy>::call(part_begin, part_count, tok,
             std::forward<F>(op), std::forward<Proj>(proj));

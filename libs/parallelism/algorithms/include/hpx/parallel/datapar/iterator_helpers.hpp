@@ -257,6 +257,36 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
     };
 
     ///////////////////////////////////////////////////////////////////////////
+    template <typename Iter, typename Enable = void>
+    struct datapar_loop_step_tok
+    {
+        typedef typename std::iterator_traits<Iter>::value_type value_type;
+
+        typedef typename traits::vector_pack_type<value_type, 1>::type V1;
+        typedef typename traits::vector_pack_type<value_type>::type V;
+
+        template <typename F>
+        HPX_HOST_DEVICE HPX_FORCEINLINE static std::size_t call1(
+            F&& f, Iter& it)
+        {
+            V1 tmp(traits::vector_pack_load<V1, value_type>::aligned(it));
+            HPX_INVOKE(f, &tmp);
+            traits::vector_pack_store<V1, value_type>::aligned(tmp, it);
+            return traits::vector_pack_size<V1>::value;
+        }
+
+        template <typename F>
+        HPX_HOST_DEVICE HPX_FORCEINLINE static std::size_t callv(
+            F&& f, Iter& it)
+        {
+            V tmp(traits::vector_pack_load<V, value_type>::aligned(it));
+            HPX_INVOKE(f, &tmp);
+            traits::vector_pack_store<V, value_type>::aligned(tmp, it);
+            return traits::vector_pack_size<V>::value;
+        }
+    };
+
+    ///////////////////////////////////////////////////////////////////////////
     template <typename V1, typename V2>
     struct invoke_vectorized_in2
     {

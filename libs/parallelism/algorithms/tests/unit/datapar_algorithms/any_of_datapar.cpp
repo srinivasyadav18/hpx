@@ -5,6 +5,7 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+#include <hpx/include/datapar.hpp>
 #include <hpx/local/init.hpp>
 
 #include <iostream>
@@ -41,7 +42,6 @@ void any_of_test()
     test_any_of<std::random_access_iterator_tag>();
     test_any_of<std::forward_iterator_tag>();
 }
-
 
 template <typename IteratorTag>
 void test_any_of_exception()

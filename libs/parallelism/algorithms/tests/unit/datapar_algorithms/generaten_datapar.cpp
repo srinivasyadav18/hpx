@@ -23,12 +23,11 @@ void test_generate_n()
 
     test_generate_n(IteratorTag());
 
-    test_generate_n(seq, IteratorTag());
-    test_generate_n(par, IteratorTag());
-    test_generate_n(par_unseq, IteratorTag());
+    test_generate_n(simd, IteratorTag());
+    test_generate_n(simdpar, IteratorTag());
 
-    test_generate_n_async(seq(task), IteratorTag());
-    test_generate_n_async(par(task), IteratorTag());
+    test_generate_n_async(simd(task), IteratorTag());
+    test_generate_n_async(simdpar(task), IteratorTag());
 }
 
 void generate_n_test()
@@ -48,11 +47,11 @@ void test_generate_n_exception()
     // If the execution policy object is of type vector_execution_policy,
     // std::terminate shall be called. therefore we do not test exceptions
     // with a vector execution policy
-    test_generate_n_exception(seq, IteratorTag());
-    test_generate_n_exception(par, IteratorTag());
+    test_generate_n_exception(simd, IteratorTag());
+    test_generate_n_exception(simdpar, IteratorTag());
 
-    test_generate_n_exception_async(seq(task), IteratorTag());
-    test_generate_n_exception_async(par(task), IteratorTag());
+    test_generate_n_exception_async(simd(task), IteratorTag());
+    test_generate_n_exception_async(simdpar(task), IteratorTag());
 }
 
 void generate_n_exception_test()
@@ -70,11 +69,11 @@ void test_generate_n_bad_alloc()
     // If the execution policy object is of type vector_execution_policy,
     // std::terminate shall be called. therefore we do not test exceptions
     // with a vector execution policy
-    test_generate_n_bad_alloc(seq, IteratorTag());
-    test_generate_n_bad_alloc(par, IteratorTag());
+    test_generate_n_bad_alloc(simd, IteratorTag());
+    test_generate_n_bad_alloc(simdpar, IteratorTag());
 
-    test_generate_n_bad_alloc_async(seq(task), IteratorTag());
-    test_generate_n_bad_alloc_async(par(task), IteratorTag());
+    test_generate_n_bad_alloc_async(simd(task), IteratorTag());
+    test_generate_n_bad_alloc_async(simdpar(task), IteratorTag());
 }
 
 void generate_n_bad_alloc_test()

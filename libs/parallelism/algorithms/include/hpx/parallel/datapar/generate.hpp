@@ -46,8 +46,8 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
     template <typename ExPolicy, typename Iter, typename Sent, typename F>
     HPX_HOST_DEVICE HPX_FORCEINLINE typename std::enable_if<
         hpx::is_vectorpack_execution_policy<ExPolicy>::value, Iter>::type
-    tag_dispatch(hpx::parallel::detail::sequential_generate_t,
-        ExPolicy&& policy, Iter first, Sent last, F&& f)
+    tag_dispatch(
+        sequential_generate_t, ExPolicy&& policy, Iter first, Sent last, F&& f)
     {
         return datapar_generate::call(
             std::forward<ExPolicy>(policy), first, last, std::forward<F>(f));
@@ -79,8 +79,8 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
     template <typename ExPolicy, typename Iter, typename F>
     HPX_HOST_DEVICE HPX_FORCEINLINE typename std::enable_if<
         hpx::is_vectorpack_execution_policy<ExPolicy>::value, Iter>::type
-    tag_dispatch(hpx::parallel::detail::sequential_generate_n_t,
-        ExPolicy&& policy, Iter first, std::size_t count, F&& f)
+    tag_dispatch(sequential_generate_n_t, ExPolicy&& policy, Iter first,
+        std::size_t count, F&& f)
     {
         return datapar_generate_n::call(
             std::forward<ExPolicy>(policy), first, count, std::forward<F>(f));

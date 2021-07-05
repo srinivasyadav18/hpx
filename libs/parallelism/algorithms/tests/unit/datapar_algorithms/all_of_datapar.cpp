@@ -5,6 +5,7 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+#include <hpx/include/datapar.hpp>
 #include <hpx/local/init.hpp>
 
 #include <iostream>
@@ -33,9 +34,6 @@ void test_all_of()
 
     test_all_of_async(simd(task), IteratorTag());
     test_all_of_async(simdpar(task), IteratorTag());
-
-    test_all_of_ranges_async(simd(task), IteratorTag(), proj());
-    test_all_of_ranges_async(simdpar(task), IteratorTag(), proj());
 }
 
 void all_of_test()

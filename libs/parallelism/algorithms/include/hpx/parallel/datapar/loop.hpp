@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>
+#include <iostream>
 #include <iterator>
 #include <type_traits>
 #include <utility>
@@ -170,9 +171,11 @@ namespace hpx { namespace parallel { namespace util {
             {
                 while (!is_data_aligned(first) && first != last)
                 {
+                    std::size_t incr =
+                        datapar_loop_step_tok<Begin>::call1(f, first);
                     if (tok.was_cancelled())
                         return first;
-                    datapar_loop_step<Begin>::call1(f, first);
+                    std::advance(first, incr);
                 }
 
                 static std::size_t constexpr size =
@@ -181,16 +184,20 @@ namespace hpx { namespace parallel { namespace util {
                 End const lastV = last - (size + 1);
                 while (first < lastV)
                 {
+                    std::size_t incr =
+                        datapar_loop_step_tok<Begin>::callv(f, first);
                     if (tok.was_cancelled())
                         return first;
-                    datapar_loop_step<Begin>::callv(f, first);
+                    std::advance(first, incr);
                 }
 
                 while (first != last)
                 {
+                    std::size_t incr =
+                        datapar_loop_step_tok<Begin>::call1(f, first);
                     if (tok.was_cancelled())
                         return first;
-                    datapar_loop_step<Begin>::call1(f, first);
+                    std::advance(first, incr);
                 }
 
                 return first;
@@ -204,9 +211,11 @@ namespace hpx { namespace parallel { namespace util {
             {
                 while (it != end)
                 {
+                    std::size_t incr =
+                        datapar_loop_step_tok<Begin>::call1(f, it);
                     if (tok.was_cancelled())
                         return it;
-                    datapar_loop_step<Begin>::call1(f, it);
+                    std::advance(it, incr);
                 }
                 return it;
             }
@@ -390,9 +399,11 @@ namespace hpx { namespace parallel { namespace util {
 
                 for (/* */; !detail::is_data_aligned(first) && len != 0; --len)
                 {
+                    std::size_t incr =
+                        datapar_loop_step_tok<InIter>::call1(f, first);
                     if (tok.was_cancelled())
                         return first;
-                    datapar_loop_step<InIter>::call1(f, first);
+                    std::advance(first, incr);
                 }
 
                 static std::size_t constexpr size =
@@ -401,16 +412,20 @@ namespace hpx { namespace parallel { namespace util {
                 for (std::int64_t len_v = std::int64_t(len - (size + 1));
                      len_v > 0; len_v -= size, len -= size)
                 {
+                    std::size_t incr =
+                        datapar_loop_step_tok<InIter>::callv(f, first);
                     if (tok.was_cancelled())
                         return first;
-                    datapar_loop_step<InIter>::callv(f, first);
+                    std::advance(first, incr);
                 }
 
                 for (/* */; len != 0; --len)
                 {
+                    std::size_t incr =
+                        datapar_loop_step_tok<InIter>::call1(f, first);
                     if (tok.was_cancelled())
                         return first;
-                    datapar_loop_step<InIter>::call1(f, first);
+                    std::advance(first, incr);
                 }
 
                 return first;
@@ -423,9 +438,11 @@ namespace hpx { namespace parallel { namespace util {
             {
                 for (/* */; count != 0; --count)
                 {
+                    std::size_t incr =
+                        datapar_loop_step_tok<InIter>::call1(f, first);
                     if (tok.was_cancelled())
                         return first;
-                    datapar_loop_step<InIter>::call1(f, first);
+                    std::advance(first, incr);
                 }
                 return first;
             }
