@@ -17,6 +17,8 @@ set(algorithms_headers
     hpx/parallel/algorithms/copy.hpp
     hpx/parallel/algorithms/count.hpp
     hpx/parallel/algorithms/destroy.hpp
+    hpx/parallel/algorithms/detail/adjacent_difference.hpp
+    hpx/parallel/algorithms/detail/adjacent_find.hpp
     hpx/parallel/algorithms/detail/accumulate.hpp
     hpx/parallel/algorithms/detail/advance_to_sentinel.hpp
     hpx/parallel/algorithms/detail/dispatch.hpp
@@ -125,8 +127,14 @@ set(algorithms_headers
     hpx/parallel/container_memory.hpp
     hpx/parallel/container_numeric.hpp
     hpx/parallel/datapar.hpp
+    hpx/parallel/datapar/adjacent_difference.hpp
+    hpx/parallel/datapar/adjacent_find.hpp
+    hpx/parallel/datapar/fill.hpp
+    hpx/parallel/datapar/find.hpp
+    hpx/parallel/datapar/generate.hpp
     hpx/parallel/datapar/iterator_helpers.hpp
     hpx/parallel/datapar/loop.hpp
+    hpx/parallel/datapar/transfer.hpp
     hpx/parallel/datapar/transform_loop.hpp
     hpx/parallel/datapar/zip_iterator.hpp
     hpx/parallel/memory.hpp

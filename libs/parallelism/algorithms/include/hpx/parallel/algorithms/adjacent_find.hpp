@@ -125,6 +125,7 @@ namespace hpx {
 #include <hpx/functional/tag_fallback_dispatch.hpp>
 #include <hpx/iterator_support/traits/is_iterator.hpp>
 #include <hpx/parallel/algorithms/adjacent_find.hpp>
+#include <hpx/parallel/algorithms/detail/adjacent_find.hpp>
 #include <hpx/parallel/algorithms/detail/dispatch.hpp>
 #include <hpx/parallel/util/detail/algorithm_result.hpp>
 #include <hpx/parallel/util/invoke_projected.hpp>
@@ -159,7 +160,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
             static InIter sequential(
                 ExPolicy, InIter first, Sent_ last, Pred&& pred, Proj&& proj)
             {
-                return std::adjacent_find(first, last,
+                return sequential_adjacent_find<std::decay_t<ExPolicy>>(
+                    first, last,
                     util::invoke_projected<Pred, Proj>(
                         std::forward<Pred>(pred), std::forward<Proj>(proj)));
             }
@@ -193,12 +195,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
                 auto f1 = [pred_projected = std::move(pred_projected), tok](
                               zip_iterator it, std::size_t part_size,
                               std::size_t base_idx) mutable {
-                    util::loop_idx_n(base_idx, it, part_size, tok,
-                        [&pred_projected, &tok](reference t, std::size_t i) {
-                            using hpx::get;
-                            if (pred_projected(get<0>(t), get<1>(t)))
-                                tok.cancel(i);
-                        });
+                    sequential_adjacent_find<std::decay_t<ExPolicy>>(
+                        base_idx, it, part_size, tok, std::forward<decltype(pred_projected)>(pred_projected));
                 };
 
                 auto f2 =
