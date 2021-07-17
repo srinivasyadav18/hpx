@@ -419,7 +419,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
             static constexpr Iter sequential(ExPolicy, Iter first, Sent last,
                 T const& val, Proj&& proj = Proj())
             {
-                return sequential_find(
+                return sequential_find<ExPolicy>(
                     first, last, val, std::forward<Proj>(proj));
             }
 
@@ -443,13 +443,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
                 auto f1 = [val, proj = std::forward<Proj>(proj), tok](Iter it,
                               std::size_t part_size,
                               std::size_t base_idx) mutable -> void {
-                    util::loop_idx_n(base_idx, it, part_size, tok,
-                        [&val, &proj, &tok](type& v, std::size_t i) -> void {
-                            if (hpx::util::invoke(proj, v) == val)
-                            {
-                                tok.cancel(i);
-                            }
-                        });
+                    sequential_find<std::decay_t<ExPolicy>>(base_idx, it,
+                        part_size, tok, val, std::forward<Proj>(proj));
                 };
 
                 auto f2 =
@@ -516,7 +511,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
             static constexpr Iter sequential(
                 ExPolicy, Iter first, Sent last, F&& f, Proj&& proj = Proj())
             {
-                return sequential_find_if(
+                return sequential_find_if<ExPolicy>(
                     first, last, std::forward<F>(f), std::forward<Proj>(proj));
             }
 
@@ -541,14 +536,9 @@ namespace hpx { namespace parallel { inline namespace v1 {
                               proj = std::forward<Proj>(proj),
                               tok](Iter it, std::size_t part_size,
                               std::size_t base_idx) mutable -> void {
-                    util::loop_idx_n(base_idx, it, part_size, tok,
-                        [&f, &proj, &tok](type& v, std::size_t i) -> void {
-                            if (hpx::util::invoke(
-                                    f, hpx::util::invoke(proj, v)))
-                            {
-                                tok.cancel(i);
-                            }
-                        });
+                    sequential_find_if<std::decay_t<ExPolicy>>(base_idx, it,
+                        part_size, tok, std::forward<F>(f),
+                        std::forward<Proj>(proj));
                 };
 
                 auto f2 =
@@ -621,7 +611,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
             static constexpr Iter sequential(
                 ExPolicy, Iter first, Sent last, F&& f, Proj&& proj = Proj())
             {
-                return sequential_find_if_not(
+                return sequential_find_if_not<ExPolicy>(
                     first, last, std::forward<F>(f), std::forward<Proj>(proj));
             }
 
@@ -646,14 +636,9 @@ namespace hpx { namespace parallel { inline namespace v1 {
                               proj = std::forward<Proj>(proj),
                               tok](Iter it, std::size_t part_size,
                               std::size_t base_idx) mutable -> void {
-                    util::loop_idx_n(base_idx, it, part_size, tok,
-                        [&f, &proj, &tok](type& v, std::size_t i) -> void {
-                            if (!hpx::util::invoke(
-                                    f, hpx::util::invoke(proj, v)))
-                            {
-                                tok.cancel(i);
-                            }
-                        });
+                    sequential_find_if_not<std::decay_t<ExPolicy>>(base_idx, it,
+                        part_size, tok, std::forward<F>(f),
+                        std::forward<Proj>(proj));
                 };
 
                 auto f2 =
@@ -713,64 +698,6 @@ namespace hpx { namespace parallel { inline namespace v1 {
     ///////////////////////////////////////////////////////////////////////////
     // find_end
     namespace detail {
-
-        template <typename Iter1, typename Sent1, typename Iter2,
-            typename Sent2, typename Pred, typename Proj1, typename Proj2>
-        constexpr Iter1 sequential_search(Iter1 first1, Sent1 last1,
-            Iter2 first2, Sent2 last2, Pred&& op, Proj1&& proj1, Proj2&& proj2)
-        {
-            for (/**/; /**/; ++first1)
-            {
-                Iter1 it1 = first1;
-                for (Iter2 it2 = first2; /**/; (void) ++it1, ++it2)
-                {
-                    if (it2 == last2)
-                    {
-                        return first1;
-                    }
-                    if (it1 == last1)
-                    {
-                        return last1;
-                    }
-                    if (!hpx::util::invoke(op, hpx::util::invoke(proj1, *it1),
-                            hpx::util::invoke(proj2, *it2)))
-                    {
-                        break;
-                    }
-                }
-            }
-        }
-
-        template <typename Iter1, typename Sent1, typename Iter2,
-            typename Sent2, typename Pred, typename Proj1, typename Proj2>
-        constexpr Iter1 sequential_find_end(Iter1 first1, Sent1 last1,
-            Iter2 first2, Sent2 last2, Pred&& op, Proj1&& proj1, Proj2&& proj2)
-        {
-            if (first2 == last2)
-            {
-                return detail::advance_to_sentinel(first1, last1);
-            }
-
-            Iter1 result = last1;
-            while (true)
-            {
-                Iter1 new_result = sequential_search(
-                    first1, last1, first2, last2, op, proj1, proj2);
-
-                if (new_result == last1)
-                {
-                    break;
-                }
-                else
-                {
-                    result = new_result;
-                    first1 = result;
-                    ++first1;
-                }
-            }
-            return result;
-        }
-
         template <typename FwdIter>
         struct find_end : public detail::algorithm<find_end<FwdIter>, FwdIter>
         {
@@ -786,8 +713,8 @@ namespace hpx { namespace parallel { inline namespace v1 {
                 Sent1 last1, Iter2 first2, Sent2 last2, Pred&& op,
                 Proj1&& proj1, Proj2&& proj2)
             {
-                return sequential_find_end(first1, last1, first2, last2,
-                    std::forward<Pred>(op), std::forward<Proj1>(proj1),
+                return sequential_find_end<ExPolicy>(first1, last1, first2,
+                    last2, std::forward<Pred>(op), std::forward<Proj1>(proj1),
                     std::forward<Proj2>(proj2));
             }
 
@@ -802,8 +729,7 @@ namespace hpx { namespace parallel { inline namespace v1 {
             {
                 using result_type =
                     util::detail::algorithm_result<ExPolicy, Iter1>;
-                using reference =
-                    typename std::iterator_traits<Iter1>::reference;
+
                 using difference_type =
                     typename std::iterator_traits<Iter1>::difference_type;
 
@@ -823,43 +749,14 @@ namespace hpx { namespace parallel { inline namespace v1 {
                     std::greater<difference_type>>
                     tok(-1);
 
-                auto f1 = [count, diff, tok, first2,
-                              op = std::forward<Pred>(op),
+                auto f1 = [diff, tok, first2, op = std::forward<Pred>(op),
                               proj1 = std::forward<Proj1>(proj1),
                               proj2 = std::forward<Proj2>(proj2)](Iter1 it,
                               std::size_t part_size,
                               std::size_t base_idx) mutable -> void {
-                    Iter1 curr = it;
-
-                    util::loop_idx_n(base_idx, it, part_size, tok,
-                        [=, &tok, &curr, &op, &proj1, &proj2](
-                            reference t, std::size_t i) -> void {
-                            ++curr;
-                            if (hpx::util::invoke(op,
-                                    hpx::util::invoke(proj1, t),
-                                    hpx::util::invoke(proj2, *first2)))
-                            {
-                                difference_type local_count = 1;
-                                FwdIter mid = curr;
-
-                                for (difference_type len = 0;
-                                     local_count != diff && len != count;
-                                     (void) ++local_count, ++len, ++mid)
-                                {
-                                    if (!hpx::util::invoke(op,
-                                            hpx::util::invoke(proj1, t),
-                                            hpx::util::invoke(proj2, *first2)))
-                                    {
-                                        break;
-                                    }
-                                }
-
-                                if (local_count == diff)
-                                {
-                                    tok.cancel(i);
-                                }
-                            }
-                        });
+                    sequential_find_end<std::decay_t<ExPolicy>>(it, first2,
+                        base_idx, part_size, diff, tok, std::forward<Pred>(op),
+                        std::forward<Proj1>(proj1), std::forward<Proj2>(proj2));
                 };
 
                 auto f2 =
@@ -937,25 +834,9 @@ namespace hpx { namespace parallel { inline namespace v1 {
                 InIter2 s_first, InIter2 s_last, Pred&& op, Proj1&& proj1,
                 Proj2&& proj2)
             {
-                if (first == last)
-                    return last;
-
-                for (/* */; first != last; ++first)
-                {
-                    for (InIter2 iter = s_first; iter != s_last; ++iter)
-                    {
-                        if (hpx::util::invoke(
-                                util::compare_projected<Pred, Proj1, Proj2>(
-                                    std::forward<Pred>(op),
-                                    std::forward<Proj1>(proj1),
-                                    std::forward<Proj2>(proj2)),
-                                *first, *iter))
-                        {
-                            return first;
-                        }
-                    }
-                }
-                return last;
+                return sequential_find_first_of<ExPolicy>(first, last, s_first,
+                    s_last, std::forward<Pred>(op), std::forward<Proj1>(proj1),
+                    std::forward<Proj2>(proj2));
             }
 
             template <typename ExPolicy, typename FwdIter2, typename Pred,
@@ -990,23 +871,10 @@ namespace hpx { namespace parallel { inline namespace v1 {
                               proj2 = std::forward<Proj2>(proj2)](FwdIter it,
                               std::size_t part_size,
                               std::size_t base_idx) mutable -> void {
-                    util::loop_idx_n(base_idx, it, part_size, tok,
-                        [&tok, &s_first, &s_last, &op, &proj1, &proj2](
-                            reference v, std::size_t i) -> void {
-                            for (FwdIter2 iter = s_first; iter != s_last;
-                                 ++iter)
-                            {
-                                if (hpx::util::invoke(
-                                        util::compare_projected<Pred, Proj1,
-                                            Proj2>(std::forward<Pred>(op),
-                                            std::forward<Proj1>(proj1),
-                                            std::forward<Proj2>(proj2)),
-                                        v, *iter))
-                                {
-                                    tok.cancel(i);
-                                }
-                            }
-                        });
+                    sequential_find_first_of<std::decay_t<ExPolicy>>(it,
+                        s_first, s_last, base_idx, part_size, tok,
+                        std::forward<Pred>(op), std::forward<Proj1>(proj1),
+                        std::forward<Proj2>(proj2));
                 };
 
                 auto f2 =
