@@ -26,7 +26,7 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
     private:
         template <typename InIter, typename Sent_, typename PredProj>
         friend inline InIter tag_fallback_dispatch(
-            hpx::parallel::detail::sequential_adjacent_find_t<ExPolicy>,
+            sequential_adjacent_find_t<ExPolicy>,
             InIter first, Sent_ last, PredProj&& pred_projected)
         {
             return std::adjacent_find(
@@ -35,7 +35,7 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
 
         template <typename ZipIter, typename Token, typename PredProj>
         friend inline void tag_fallback_dispatch(
-            hpx::parallel::detail::sequential_adjacent_find_t<ExPolicy>,
+            sequential_adjacent_find_t<ExPolicy>,
             std::size_t base_idx, ZipIter part_begin, std::size_t part_count,
             Token& tok, PredProj&& pred_projected)
         {

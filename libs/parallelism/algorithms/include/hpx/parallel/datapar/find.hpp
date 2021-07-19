@@ -337,7 +337,7 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
         HPX_CONCEPT_REQUIRES_(
             hpx::is_vectorpack_execution_policy<ExPolicy>::value)>
     inline constexpr Iter1 tag_dispatch(
-        hpx::parallel::detail::sequential_find_end_t<ExPolicy>, Iter1 first1,
+        sequential_find_end_t<ExPolicy>, Iter1 first1,
         Sent1 last1, Iter2 first2, Sent2 last2, Pred&& op, Proj1&& proj1,
         Proj2&& proj2)
     {
@@ -351,7 +351,7 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
         HPX_CONCEPT_REQUIRES_(
             hpx::is_vectorpack_execution_policy<ExPolicy>::value)>
     inline constexpr void tag_dispatch(
-        hpx::parallel::detail::sequential_find_end_t<ExPolicy>, Iter1 it,
+        sequential_find_end_t<ExPolicy>, Iter1 it,
         Iter2 first2, std::size_t base_idx, std::size_t part_size,
         std::size_t diff, Token& tok, Pred&& op, Proj1&& proj1, Proj2&& proj2)
     {
@@ -425,7 +425,7 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
         HPX_CONCEPT_REQUIRES_(
             hpx::is_vectorpack_execution_policy<ExPolicy>::value)>
     inline constexpr InIter1 tag_dispatch(
-        hpx::parallel::detail::sequential_find_first_of_t<ExPolicy>,
+        sequential_find_first_of_t<ExPolicy>,
         InIter1 first, InIter1 last, InIter2 s_first, InIter2 s_last, Pred&& op,
         Proj1&& proj1, Proj2&& proj2)
     {
@@ -439,7 +439,7 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
         HPX_CONCEPT_REQUIRES_(
             hpx::is_vectorpack_execution_policy<ExPolicy>::value)>
     inline constexpr void tag_dispatch(
-        hpx::parallel::detail::sequential_find_first_of_t<ExPolicy>, FwdIter it,
+        sequential_find_first_of_t<ExPolicy>, FwdIter it,
         FwdIter2 s_first, FwdIter2 s_last, std::size_t base_idx,
         std::size_t part_size, Token& tok, Pred&& op, Proj1&& proj1,
         Proj2&& proj2)

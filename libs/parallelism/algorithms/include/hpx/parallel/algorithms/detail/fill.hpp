@@ -31,7 +31,7 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
     private:
         template <typename ExPolicy, typename Iter, typename Sent, typename T>
         friend constexpr Iter tag_fallback_dispatch(
-            hpx::parallel::detail::sequential_fill_t, ExPolicy&&, Iter first,
+            sequential_fill_t, ExPolicy&&, Iter first,
             Sent last, T const& value)
         {
             return sequential_fill_helper(first, last, value);
@@ -65,7 +65,7 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
     private:
         template <typename ExPolicy, typename Iter, typename T>
         friend constexpr Iter tag_fallback_dispatch(
-            hpx::parallel::detail::sequential_fill_n_t, ExPolicy&&, Iter first,
+            sequential_fill_n_t, ExPolicy&&, Iter first,
             std::size_t count, T const& value)
         {
             return sequential_fill_n_helper(first, count, value);
