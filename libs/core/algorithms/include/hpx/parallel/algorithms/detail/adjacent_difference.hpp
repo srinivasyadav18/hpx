@@ -1,4 +1,6 @@
 //  Copyright (c) 2021 Srinivas Yadav
+//  Copyright (c) 2021 Karame M.shokooh
+
 //
 //  SPDX-License-Identifier: BSL-1.0
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -32,8 +34,19 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
             sequential_adjacent_difference_t<ExPolicy>, InIter first,
             InIter last, OutIter dest, Op&& op)
         {
-            return std::adjacent_difference(
-                first, last, dest, std::forward<Op>(op));
+            if (first == last)
+                return dest;
+
+            using value_t = typename std::iterator_traits<InIter>::value_type;
+            value_t acc = *first;
+            *dest = acc;
+            while (++first != last)
+            {
+                value_t val = *first;
+                *++dest = op(val, std::move(acc));    // std::move since C++20
+                acc = std::move(val);
+            }
+            return ++dest;
         }
     };
 
