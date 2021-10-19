@@ -309,7 +309,7 @@ namespace hpx {
 
             return hpx::parallel::v1::detail::adjacent_difference<FwdIter2>()
                 .call(hpx::execution::sequenced_policy{}, first, last, dest,
-                    std::minus<value_type>());
+                    std::minus<>());
         }
 
         // clang-format off
@@ -331,7 +331,7 @@ namespace hpx {
 
             return hpx::parallel::v1::detail::adjacent_difference<FwdIter2>()
                 .call(std::forward<ExPolicy>(policy), first, last, dest,
-                    std::minus<value_type>());
+                    std::minus<>());
         }
 
         // clang-format off

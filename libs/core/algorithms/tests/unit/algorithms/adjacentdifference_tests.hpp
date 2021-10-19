@@ -29,7 +29,7 @@ void test_adjacent_difference(ExPolicy policy)
     std::vector<std::size_t> d(10007);
     std::vector<std::size_t> d_ans(10007);
 
-    auto it = hpx::parallel::adjacent_difference(
+    auto it = hpx::adjacent_difference(
         policy, std::begin(c), std::end(c), std::begin(d));
     std::adjacent_difference(std::begin(c), std::end(c), std::begin(d_ans));
 
@@ -49,7 +49,7 @@ void test_adjacent_difference_async(ExPolicy p)
     std::vector<std::size_t> d(10007);
     std::vector<std::size_t> d_ans(10007);
 
-    auto f_it = hpx::parallel::adjacent_difference(
+    auto f_it = hpx::adjacent_difference(
         p, std::begin(c), std::end(c), std::begin(d));
     std::adjacent_difference(std::begin(c), std::end(c), std::begin(d_ans));
 
@@ -76,7 +76,7 @@ void test_adjacent_difference_exception(ExPolicy policy, IteratorTag)
     bool caught_exception = false;
     try
     {
-        hpx::parallel::adjacent_difference(policy,
+        hpx::adjacent_difference(policy,
             decorated_iterator(std::begin(c)), decorated_iterator(std::end(c)),
             std::begin(d), [](auto lhs, auto rhs) {
                 throw std::runtime_error("test");
@@ -112,7 +112,7 @@ void test_adjacent_difference_exception_async(ExPolicy p, IteratorTag)
 
     try
     {
-        hpx::future<base_iterator> f = hpx::parallel::adjacent_difference(p,
+        hpx::future<base_iterator> f = hpx::adjacent_difference(p,
             decorated_iterator(std::begin(c)), decorated_iterator(std::end(c)),
             std::begin(d), [](auto lhs, auto rhs) {
                 throw std::runtime_error("test");
@@ -156,7 +156,7 @@ void test_adjacent_difference_bad_alloc(ExPolicy policy, IteratorTag)
     bool caught_bad_alloc = false;
     try
     {
-        hpx::parallel::adjacent_difference(policy,
+        hpx::adjacent_difference(policy,
             decorated_iterator(std::begin(c)), decorated_iterator(std::end(c)),
             std::begin(d), [](auto lhs, auto rhs) {
                 throw std::bad_alloc();
@@ -190,7 +190,7 @@ void test_adjacent_difference_bad_alloc_async(ExPolicy p, IteratorTag)
 
     try
     {
-        hpx::future<base_iterator> f = hpx::parallel::adjacent_difference(p,
+        hpx::future<base_iterator> f = hpx::adjacent_difference(p,
             decorated_iterator(std::begin(c)), decorated_iterator(std::end(c)),
             std::begin(d), [](auto lhs, auto rhs) {
                 throw std::bad_alloc();
