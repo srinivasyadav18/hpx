@@ -155,6 +155,7 @@ namespace hpx {
 #include <hpx/parallel/algorithms/detail/adjacent_difference.hpp>
 #include <hpx/parallel/algorithms/detail/dispatch.hpp>
 #include <hpx/parallel/algorithms/detail/distance.hpp>
+#include <hpx/parallel/util/detail/sender_util.hpp>
 #include <hpx/parallel/util/detail/algorithm_result.hpp>
 #include <hpx/parallel/util/loop.hpp>
 #include <hpx/parallel/util/partitioner.hpp>
@@ -291,15 +292,16 @@ namespace hpx {
     ///////////////////////////////////////////////////////////////////////////
     // CPO for hpx::adjacent_difference
     HPX_INLINE_CONSTEXPR_VARIABLE struct adjacent_difference_t final
-      : hpx::functional::tag_fallback<adjacent_difference_t>
+      : hpx::detail::tag_parallel_algorithm<adjacent_difference_t>
     {
         // clang-format off
+        private:
         template <typename FwdIter1, typename FwdIter2,
              HPX_CONCEPT_REQUIRES_(
                 hpx::traits::is_iterator<FwdIter1>::value
             )>
         // clang-format on
-        friend FwdIter2 tag_fallback_dispatch(hpx::adjacent_difference_t,
+        friend FwdIter2 tag_fallback_invoke(hpx::adjacent_difference_t,
             FwdIter1 first, FwdIter1 last, FwdIter2 dest)
         {
             static_assert((hpx::traits::is_forward_iterator<FwdIter1>::value),
@@ -321,7 +323,7 @@ namespace hpx {
         // clang-format on
         friend typename parallel::util::detail::algorithm_result<ExPolicy,
             FwdIter2>::type
-        tag_fallback_dispatch(hpx::adjacent_difference_t, ExPolicy&& policy,
+        tag_fallback_invoke(hpx::adjacent_difference_t, ExPolicy&& policy,
             FwdIter1 first, FwdIter1 last, FwdIter2 dest)
         {
             static_assert((hpx::traits::is_forward_iterator<FwdIter2>::value),
@@ -340,7 +342,7 @@ namespace hpx {
                 hpx::traits::is_iterator<FwdIter1>::value
             )>
         // clang-format on
-        friend FwdIter2 tag_fallback_dispatch(hpx::adjacent_difference_t,
+        friend FwdIter2 tag_fallback_invoke(hpx::adjacent_difference_t,
             FwdIter1 first, FwdIter1 last, FwdIter2 dest, Op&& op)
         {
             static_assert((hpx::traits::is_forward_iterator<FwdIter1>::value),
@@ -360,7 +362,7 @@ namespace hpx {
         // clang-format on
         friend typename parallel::util::detail::algorithm_result<ExPolicy,
             FwdIter2>::type
-        tag_fallback_dispatch(hpx::adjacent_difference_t, ExPolicy&& policy,
+        tag_fallback_invoke(hpx::adjacent_difference_t, ExPolicy&& policy,
             FwdIter1 first, FwdIter1 last, FwdIter2 dest, Op&& op)
         {
             static_assert((hpx::traits::is_forward_iterator<FwdIter2>::value),

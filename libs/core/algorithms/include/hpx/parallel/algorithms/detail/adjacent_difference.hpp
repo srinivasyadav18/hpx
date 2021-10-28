@@ -29,10 +29,10 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
             sequential_adjacent_difference_t<ExPolicy>>
     {
     private:
-        template <typename InIter, typename OutIter, typename Op>
+    template <typename InIter, typename Sent, typename OutIter, typename Op>
         friend inline OutIter tag_fallback_invoke(
-            sequential_adjacent_difference_t<ExPolicy>, InIter first,
-            InIter last, OutIter dest, Op&& op)
+            sequential_adjacent_difference_t<ExPolicy>, InIter first, Sent last,
+            OutIter dest, Op&& op)
         {
             if (first == last)
                 return dest;
@@ -56,9 +56,10 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
         sequential_adjacent_difference =
             sequential_adjacent_difference_t<ExPolicy>{};
 #else
-    template <typename ExPolicy, typename InIter, typename OutIter, typename Op>
+    template <typename ExPolicy, typename InIter, typename Sent,
+        typename OutIter, typename Op>
     HPX_HOST_DEVICE HPX_FORCEINLINE OutIter sequential_adjacent_difference(
-        InIter first, InIter last, OutIter dest, Op&& op)
+        InIter first, Sent last, OutIter dest, Op&& op)
     {
         return sequential_adjacent_difference_t<ExPolicy>{}(
             first, last, dest, std::forward<Op>(op));
