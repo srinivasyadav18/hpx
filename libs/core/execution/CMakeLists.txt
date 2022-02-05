@@ -46,6 +46,7 @@ set(execution_headers
     hpx/execution/executors/polymorphic_executor.hpp
     hpx/execution/executors/rebind_executor.hpp
     hpx/execution/executors/static_chunk_size.hpp
+    hpx/execution/traits/detail/eve/vector_pack_type.hpp
     hpx/execution/traits/detail/simd/vector_pack_alignment_size.hpp
     hpx/execution/traits/detail/simd/vector_pack_all_any_none.hpp
     hpx/execution/traits/detail/simd/vector_pack_count_bits.hpp
@@ -105,6 +106,14 @@ set(execution_compat_headers
 
 if(TARGET Vc::vc)
   set(execution_optional_dependencies Vc::vc)
+endif()
+
+message("checking eve target")
+
+if (TARGET Eve::eve)
+  message("Found eve target")
+  set(execution_optional_dependencies Eve::eve)
+  message(${execution_optional_dependencies})
 endif()
 
 include(HPX_AddModule)

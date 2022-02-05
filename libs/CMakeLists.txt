@@ -106,6 +106,12 @@ if(HPX_WITH_DATAPAR_VC)
   target_link_libraries(hpx_core PUBLIC Vc::vc)
 endif()
 
+message("eve libs/core setup")
+if(HPX_WITH_EVE)
+  message("Success! : eve libs/core setup")
+  target_link_libraries(hpx_core PUBLIC Eve::eve)
+endif()
+
 if(HPX_WITH_ITTNOTIFY)
   target_link_libraries(hpx_core PUBLIC Amplifier::amplifier)
 endif()

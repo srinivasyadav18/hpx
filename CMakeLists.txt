@@ -959,6 +959,36 @@ hpx_option(
   ADVANCED
 )
 
+# Options for automatically fetching EVE
+hpx_option(
+  HPX_WITH_FETCH_EVE
+  BOOL
+  "Use FetchContent to fetch EVE. By default an installed EVE will be used. (default: OFF)"
+  OFF
+  CATEGORY "Build Targets"
+  ADVANCED
+)
+hpx_option(
+  HPX_WITH_EVE_TAG STRING "EVE repository tag or branch" "develop"
+  CATEGORY "Build Targets"
+  ADVANCED
+)
+
+if (HPX_WITH_FETCH_EVE)
+  hpx_option(
+    HPX_WITH_EVE
+    BOOL
+    "Use EVE as datapar library (default: ON)"
+    ON
+    CATEGORY "Build Targets"
+    ADVANCED
+  )
+  hpx_option(
+    HPX_WITH_DATAPAR BOOL
+    "Enable data parallel algorithm support (default: ON)" ON ADVANCED
+  )
+endif()
+
 # cmake-format: off
 # LibCDS option
 # NOTE: The libcds option is disabled for the 1.5.0 release as it is not ready
@@ -1992,6 +2022,8 @@ include(HPX_SetupBoostIostreams)
 
 # Set up standalone Asio
 include(HPX_SetupAsio)
+
+include(HPX_SetupEVE)
 
 # Find all allocators which are currently supported.
 include(HPX_SetupAllocator)
