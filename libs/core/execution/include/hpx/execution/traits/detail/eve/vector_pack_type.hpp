@@ -1,5 +1,4 @@
-//  Copyright (c) 2021 Srinivas Yadav
-//  Copyright (c) 2016-2017 Hartmut Kaiser
+//  Copyright (c) 2022 Srinivas Yadav
 //
 //  SPDX-License-Identifier: BSL-1.0
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
