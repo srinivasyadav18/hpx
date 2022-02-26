@@ -42,7 +42,11 @@ namespace hpx { namespace parallel { namespace util {
         {
             static_assert(traits::is_scalar_vector_pack<Vector>::value,
                 "this should be called with a scalar only");
+#if defined(HPX_HAVE_EVE)
+            return value.get(0);
+#else
             return value[0];
+#endif
         }
 
         ///////////////////////////////////////////////////////////////////////
@@ -57,10 +61,18 @@ namespace hpx { namespace parallel { namespace util {
             typedef typename std::decay<Vector>::type vector_type;
             typedef typename vector_type::value_type entry_type;
 
+#if defined(HPX_HAVE_EVE)
+            entry_type accum = value.get(0);
+#else
             entry_type accum = value[0];
+#endif
             for (size_t i = 1; i != value.size(); ++i)
             {
+#if defined(HPX_HAVE_EVE)
+                accum = f(accum, entry_type(value.get(i)));
+#else
                 accum = f(accum, entry_type(value[i]));
+#endif
             }
 
             return
@@ -77,7 +89,11 @@ namespace hpx { namespace parallel { namespace util {
         {
             for (size_t i = 0; i != value.size(); ++i)
             {
+#if defined(HPX_HAVE_EVE)
+                accum = f(accum, T(value.get(i)));
+#else
                 accum = f(accum, T(value[i]));
+#endif
             }
 
             return typename traits::vector_pack_type<T, 1>::type(accum);
