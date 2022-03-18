@@ -1,5 +1,4 @@
-//  Copyright (c) 2021 Srinivas Yadav
-//  Copyright (c) 2016-2017 Hartmut Kaiser
+//  Copyright (c) 2022 Srinivas Yadav
 //
 //  SPDX-License-Identifier: BSL-1.0
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -9,9 +8,9 @@
 
 #include <hpx/config.hpp>
 
-#if defined(HPX_HAVE_STD_EXPERIMENTAL_SIMD)
+#if defined(HPX_HAVE_EVE)
 
-#include <experimental/simd>
+#include <eve/eve.hpp>
 
 #include <cstddef>
 #include <type_traits>
@@ -23,24 +22,23 @@ namespace hpx { namespace parallel { namespace traits {
         template <typename T, std::size_t N, typename Abi>
         struct vector_pack_type
         {
-            typedef std::experimental::fixed_size_simd<T, N> type;
+            using type = eve::wide<T, eve::fixed<N>>;
         };
 
         template <typename T, typename Abi>
         struct vector_pack_type<T, 0, Abi>
         {
-            typedef typename std::conditional<std::is_void<Abi>::value,
-                std::experimental::simd_abi::native<T>, Abi>::type abi_type;
+            using abi_type = std::conditional_t<std::is_void<Abi>::value,
+                eve::expected_cardinal_t<T>, Abi>;
 
-            typedef std::experimental::simd<T, abi_type> type;
+            using type = eve::wide<T, abi_type>;
         };
 
         template <typename T, typename Abi>
         struct vector_pack_type<T, 1, Abi>
         {
-            typedef std::experimental::simd<T,
-                std::experimental::simd_abi::scalar>
-                type;
+            // using type = eve::wide<T, eve::fixed<1>>;
+            using type = T;
         };
     }    // namespace detail
 

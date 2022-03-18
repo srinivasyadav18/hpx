@@ -32,8 +32,10 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
         static HPX_FORCEINLINE bool call(Iter const& it)
         {
             typedef typename std::iterator_traits<Iter>::value_type value_type;
+            typedef typename traits::vector_pack_type<value_type>::type pack_type;
+
             return (reinterpret_cast<std::uintptr_t>(std::addressof(*it)) &
-                       (traits::vector_pack_alignment<value_type>::value -
+                       (traits::vector_pack_alignment<pack_type>::value -
                            1)) == 0;
         }
     };
@@ -56,11 +58,14 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
         typedef typename std::iterator_traits<iterator2_type>::value_type
             value2_type;
 
+        typedef typename traits::vector_pack_type<value1_type>::type pack1_type;
+        typedef typename traits::vector_pack_type<value2_type>::type pack2_type;
+
         typedef std::integral_constant<bool,
-            traits::vector_pack_size<value1_type>::value ==
-                    traits::vector_pack_size<value2_type>::value &&
-                traits::vector_pack_alignment<value1_type>::value ==
-                    traits::vector_pack_alignment<value2_type>::value>
+            traits::vector_pack_size<pack1_type>::value ==
+                    traits::vector_pack_size<pack2_type>::value &&
+                traits::vector_pack_alignment<pack1_type>::value ==
+                    traits::vector_pack_alignment<pack1_type>::value>
             type;
     };
 
@@ -416,7 +421,7 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
                 ret, dest);
 
             std::advance(it, traits::vector_pack_size<V>::value);
-            std::advance(dest, ret.size());
+            std::advance(dest, traits::vector_pack_size<decltype(ret)>::value);
         }
 
         template <typename F, typename InIter, typename OutIter>
@@ -433,7 +438,7 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
                 ret, dest);
 
             std::advance(it, traits::vector_pack_size<V>::value);
-            std::advance(dest, ret.size());
+            std::advance(dest, traits::vector_pack_size<decltype(ret)>::value);
         }
     };
 
@@ -454,7 +459,7 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
                 ret, dest);
 
             std::advance(it, traits::vector_pack_size<V>::value);
-            std::advance(dest, ret.size());
+            std::advance(dest, traits::vector_pack_size<decltype(ret)>::value);
         }
 
         template <typename F, typename InIter, typename OutIter>
@@ -471,7 +476,7 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
                 ret, dest);
 
             std::advance(it, traits::vector_pack_size<V>::value);
-            std::advance(dest, ret.size());
+            std::advance(dest, traits::vector_pack_size<decltype(ret)>::value);
         }
     };
 
@@ -501,7 +506,7 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
 
             std::advance(it1, traits::vector_pack_size<V1>::value);
             std::advance(it2, traits::vector_pack_size<V2>::value);
-            std::advance(dest, ret.size());
+            std::advance(dest, traits::vector_pack_size<decltype(ret)>::value);
         }
 
         template <typename F, typename InIter1, typename InIter2,
@@ -527,7 +532,7 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
 
             std::advance(it1, traits::vector_pack_size<V1>::value);
             std::advance(it2, traits::vector_pack_size<V2>::value);
-            std::advance(dest, ret.size());
+            std::advance(dest, traits::vector_pack_size<decltype(ret)>::value);
         }
     };
 
@@ -557,7 +562,7 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
 
             std::advance(it1, traits::vector_pack_size<V1>::value);
             std::advance(it2, traits::vector_pack_size<V2>::value);
-            std::advance(dest, ret.size());
+            std::advance(dest, traits::vector_pack_size<decltype(ret)>::value);
         }
 
         template <typename F, typename InIter1, typename InIter2,
@@ -583,7 +588,7 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
 
             std::advance(it1, traits::vector_pack_size<V1>::value);
             std::advance(it2, traits::vector_pack_size<V2>::value);
-            std::advance(dest, ret.size());
+            std::advance(dest, traits::vector_pack_size<decltype(ret)>::value);
         }
     };
 

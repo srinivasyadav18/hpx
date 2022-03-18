@@ -1,5 +1,4 @@
-//  Copyright (c) 2021 Srinivas Yadav
-//  Copyright (c) 2016-2017 Hartmut Kaiser
+//  Copyright (c) 2022 Srinivas Yadav
 //
 //  SPDX-License-Identifier: BSL-1.0
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -9,16 +8,19 @@
 
 #include <hpx/config.hpp>
 
-#if defined(HPX_HAVE_STD_EXPERIMENTAL_SIMD)
+#if defined(HPX_HAVE_EVE)
+
+#include <eve/eve.hpp>
+#include <eve/function/load.hpp>
+#include <eve/function/store.hpp>
+#include <eve/memory/aligned_ptr.hpp>
+
 #include <cstddef>
 #include <iterator>
 #include <memory>
 
-#include <experimental/simd>
-
 ///////////////////////////////////////////////////////////////////////////////
 namespace hpx { namespace parallel { namespace traits {
-    ///////////////////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////////////////
     template <typename V, typename ValueType, typename Enable>
@@ -27,13 +29,28 @@ namespace hpx { namespace parallel { namespace traits {
         template <typename Iter>
         static V aligned(Iter const& iter)
         {
-            return V(std::addressof(*iter), std::experimental::vector_aligned);
+            if constexpr (std::is_same_v<V, ValueType>)
+            {
+                return *iter;
+            }
+            else
+            {
+                return V(eve::as_aligned(
+                    std::addressof(*iter), eve::cardinal_t<V>{}));
+            }
         }
 
         template <typename Iter>
         static V unaligned(Iter const& iter)
         {
-            return V(std::addressof(*iter), std::experimental::element_aligned);
+            if constexpr (std::is_same_v<V, ValueType>)
+            {
+                return *iter;
+            }
+            else
+            {
+                return V(std::addressof(*iter));
+            }
         }
     };
 
@@ -44,15 +61,31 @@ namespace hpx { namespace parallel { namespace traits {
         template <typename Iter>
         static void aligned(V& value, Iter const& iter)
         {
-            value.copy_to(
-                std::addressof(*iter), std::experimental::vector_aligned);
+            if constexpr (std::is_same_v<V, ValueType>)
+            {
+                *iter = value;
+                return;
+            }
+            else
+            {
+                eve::store(value,
+                    eve::as_aligned(
+                        std::addressof(*iter), eve::cardinal_t<V>{}));
+            }
         }
 
         template <typename Iter>
         static void unaligned(V& value, Iter const& iter)
         {
-            value.copy_to(
-                std::addressof(*iter), std::experimental::element_aligned);
+            if constexpr (std::is_same_v<V, ValueType>)
+            {
+                *iter = value;
+                return;
+            }
+            else
+            {
+                eve::store(value, std::addressof(*iter));
+            }
         }
     };
 }}}    // namespace hpx::parallel::traits
