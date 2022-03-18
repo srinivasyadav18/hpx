@@ -38,9 +38,10 @@ namespace hpx { namespace parallel { namespace traits {
         template <typename T, typename Abi>
         struct vector_pack_type<T, 1, Abi>
         {
-            typedef std::experimental::simd<T,
-                std::experimental::simd_abi::scalar>
-                type;
+            // typedef std::experimental::simd<T,
+            //     std::experimental::simd_abi::scalar>
+            //     type;
+            using type = T;
         };
     }    // namespace detail
 

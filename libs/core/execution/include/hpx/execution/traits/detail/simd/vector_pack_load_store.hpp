@@ -27,13 +27,27 @@ namespace hpx { namespace parallel { namespace traits {
         template <typename Iter>
         static V aligned(Iter const& iter)
         {
-            return V(std::addressof(*iter), std::experimental::vector_aligned);
+            if constexpr (std::is_same_v<V, ValueType>)
+            {
+                return *iter;
+            }
+            else
+            {
+                return V(std::addressof(*iter), std::experimental::vector_aligned);
+            }
         }
 
         template <typename Iter>
         static V unaligned(Iter const& iter)
         {
-            return V(std::addressof(*iter), std::experimental::element_aligned);
+            if constexpr (std::is_same_v<V, ValueType>)
+            {
+                return *iter;
+            }
+            else
+            {
+                return V(std::addressof(*iter), std::experimental::element_aligned);
+            }
         }
     };
 
@@ -44,15 +58,31 @@ namespace hpx { namespace parallel { namespace traits {
         template <typename Iter>
         static void aligned(V& value, Iter const& iter)
         {
-            value.copy_to(
-                std::addressof(*iter), std::experimental::vector_aligned);
+            if constexpr (std::is_same_v<V, ValueType>)
+            {
+                *iter = value;
+                return;
+            }
+            else
+            {
+                value.copy_to(
+                    std::addressof(*iter), std::experimental::vector_aligned);
+            }
         }
 
         template <typename Iter>
         static void unaligned(V& value, Iter const& iter)
         {
-            value.copy_to(
-                std::addressof(*iter), std::experimental::element_aligned);
+            if constexpr (std::is_same_v<V, ValueType>)
+            {
+                *iter = value;
+                return;
+            }
+            else
+            {
+                value.copy_to(
+                    std::addressof(*iter), std::experimental::element_aligned);
+            }
         }
     };
 }}}    // namespace hpx::parallel::traits
