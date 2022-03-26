@@ -1,5 +1,4 @@
-//  Copyright (c) 2021 Srinivas Yadav
-//  Copyright (c) 2016-2017 Hartmut Kaiser
+//  Copyright (c) 2022 Srinivas Yadav
 //
 //  SPDX-License-Identifier: BSL-1.0
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -9,36 +8,37 @@
 
 #include <hpx/config.hpp>
 
-#if defined(HPX_HAVE_DATAPAR_STD_EXPERIMENTAL_SIMD)
+#if defined(HPX_HAVE_DATAPAR_EVE)
+
 #include <cstddef>
 #include <type_traits>
 
-#include <experimental/simd>
+#include <eve/eve.hpp>
+#include <eve/memory/aligned_ptr.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 namespace hpx { namespace parallel { namespace traits {
     ///////////////////////////////////////////////////////////////////////////
     template <typename T>
-    struct is_vector_pack<std::experimental::native_simd<T>> : std::true_type
+    struct is_vector_pack<eve::wide<T, eve::expected_cardinal_t<T>>> : 
+        std::true_type
     {
     };
 
     template <typename T>
-    struct is_vector_pack<T>
-      : std::false_type
+    struct is_vector_pack<T> : std::false_type
     {
     };
 
     ///////////////////////////////////////////////////////////////////////////
     template <typename T>
-    struct is_scalar_vector_pack<std::experimental::native_simd<T>>
-      : std::false_type
+    struct is_scalar_vector_pack<eve::wide<T, eve::expected_cardinal_t<T>>> : 
+        std::false_type
     {
     };
 
     template <typename T>
-    struct is_scalar_vector_pack<T>
-      : std::true_type
+    struct is_scalar_vector_pack<T> : std::true_type
     {
     };
 
@@ -50,10 +50,10 @@ namespace hpx { namespace parallel { namespace traits {
     };
 
     template <typename T, typename Abi>
-    struct vector_pack_alignment<std::experimental::simd<T, Abi>>
+    struct vector_pack_alignment<eve::wide<T, Abi>>
     {
-        static std::size_t const value = std::experimental::memory_alignment_v<
-            std::experimental::simd<T, Abi>>;
+        static std::size_t const value = eve::alignment_v<
+            eve::wide<T, Abi>>;
     };
 
     ///////////////////////////////////////////////////////////////////////////
@@ -64,10 +64,9 @@ namespace hpx { namespace parallel { namespace traits {
     };
 
     template <typename T, typename Abi>
-    struct vector_pack_size<std::experimental::simd<T, Abi>>
+    struct vector_pack_size<eve::wide<T, Abi>>
     {
-        static std::size_t const value =
-            std::experimental::simd<T, Abi>::size();
+        static std::size_t const value = eve::wide<T, Abi>::size();
     };
 }}}    // namespace hpx::parallel::traits
 
