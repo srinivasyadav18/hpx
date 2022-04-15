@@ -47,6 +47,36 @@ namespace hpx { namespace parallel { namespace traits {
     struct vector_pack_type : detail::vector_pack_type<T, N, Abi>
     {
     };
+
+    ////////////////////////////////////////////////////////////////////
+    template <typename T>
+    struct vector_pack_mask_type<T, 
+        typename std::enable_if_t<std::experimental::is_simd_v<T>>>
+    {
+        using type = T::mask_type;
+    };
+
+    ////////////////////////////////////////////////////////////////////
+    template <typename T, typename Abi>
+    HPX_HOST_DEVICE HPX_FORCEINLINE auto choose(
+        std::experimental::simd_mask<T, Abi> const& msk, 
+        std::experimental::simd<T, Abi> const& v_true, std::experimental::simd<T, Abi> const& v_false)
+    {
+        std::experimental::simd<T, Abi> v;
+        where(msk, v) = v_true;
+        where(!msk, v) = v_false;
+        return v;
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    template <typename T, typename Abi>
+    HPX_HOST_DEVICE HPX_FORCEINLINE void
+    mask_assign(std::experimental::simd_mask<T, Abi> const& msk,
+        std::experimental::simd<T, Abi>& v,
+        std::experimental::simd<T, Abi> const& val)
+    {
+        where(msk, v) = val;
+    }
 }}}    // namespace hpx::parallel::traits
 
 #endif
