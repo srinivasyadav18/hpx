@@ -46,6 +46,33 @@ namespace hpx { namespace parallel { namespace traits {
     struct vector_pack_type : detail::vector_pack_type<T, N, Abi>
     {
     };
+
+    ////////////////////////////////////////////////////////////////////
+    template <typename T>
+    struct vector_pack_mask_type<T, 
+        typename std::enable_if_t<eve::is_simd_value<T>{}>>
+    {
+        using type = eve::logical<T>;
+    };
+
+    ////////////////////////////////////////////////////////////////////
+    template <typename T, typename Abi>
+    HPX_HOST_DEVICE HPX_FORCEINLINE eve::wide<T, Abi> choose(
+        eve::logical<eve::wide<T, Abi>> const& msk, 
+        eve::wide<T, Abi> const& v_true, eve::wide<T, Abi> const& v_false)
+    {
+        return eve::if_else(msk, v_true, v_false);
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    template <typename T, typename Abi>
+    HPX_HOST_DEVICE HPX_FORCEINLINE void
+    mask_assign(eve::logical<eve::wide<T, Abi>> const& msk,
+        eve::wide<T, Abi>& v,
+        eve::wide<T, Abi> const& val)
+    {
+        v = eve::if_else(msk, val, v);
+    }
 }}}    // namespace hpx::parallel::traits
 
 #endif

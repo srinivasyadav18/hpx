@@ -33,6 +33,29 @@ namespace hpx { namespace parallel { namespace traits {
     {
         typedef typename vector_pack_type<T>::type type;
     };
+
+    ////////////////////////////////////////////////////////////////////
+    template <typename T, typename Enable=void>
+    struct vector_pack_mask_type
+    {
+        using type = bool;
+    };
+
+    ////////////////////////////////////////////////////////////////////
+    template <typename T>
+    HPX_HOST_DEVICE HPX_FORCEINLINE T choose(
+        bool msk, T v_true, T v_false)
+    {
+        return msk ? v_true : v_false;
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    template <typename T>
+    HPX_HOST_DEVICE HPX_FORCEINLINE void mask_assign(
+        bool msk, T& v, T val)
+    {
+        if (msk) v = val;
+    }
 }}}    // namespace hpx::parallel::traits
 
 #if !defined(__CUDACC__)

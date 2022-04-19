@@ -149,6 +149,29 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
             traits::vector_pack_store<V, value_type>::aligned(tmp, it);
             std::advance(it, traits::vector_pack_size<V>::value);
         }
+
+        template <typename F>
+        HPX_HOST_DEVICE HPX_FORCEINLINE static void call4v(F&& f, Iter& it)
+        {
+            static std::size_t constexpr size =
+                traits::vector_pack_size<V>::value;
+
+            V tmp(traits::vector_pack_load<V, value_type>::aligned(it));
+            HPX_INVOKE(f, tmp);
+            traits::vector_pack_store<V, value_type>::aligned(tmp, it);
+
+            V tmp1(traits::vector_pack_load<V, value_type>::aligned(it + size));
+            HPX_INVOKE(f, tmp1);
+            traits::vector_pack_store<V, value_type>::aligned(tmp1, it + size);
+
+            V tmp2(traits::vector_pack_load<V, value_type>::aligned(it + 2 * size));
+            HPX_INVOKE(f, tmp2);
+            traits::vector_pack_store<V, value_type>::aligned(tmp2, it + 2 * size);
+
+            V tmp3(traits::vector_pack_load<V, value_type>::aligned(it + 3 * size));
+            HPX_INVOKE(f, tmp3);
+            traits::vector_pack_store<V, value_type>::aligned(tmp3, it + 3 * size);
+        }
     };
 
     ///////////////////////////////////////////////////////////////////////////
