@@ -57,18 +57,21 @@ set(execution_headers
     hpx/execution/traits/detail/eve/vector_pack_all_any_none.hpp
     hpx/execution/traits/detail/eve/vector_pack_count_bits.hpp
     hpx/execution/traits/detail/eve/vector_pack_find.hpp
+    hpx/execution/traits/detail/eve/vector_pack_get_set.hpp
     hpx/execution/traits/detail/eve/vector_pack_load_store.hpp
     hpx/execution/traits/detail/eve/vector_pack_type.hpp
     hpx/execution/traits/detail/simd/vector_pack_alignment_size.hpp
     hpx/execution/traits/detail/simd/vector_pack_all_any_none.hpp
     hpx/execution/traits/detail/simd/vector_pack_count_bits.hpp
     hpx/execution/traits/detail/simd/vector_pack_find.hpp
+    hpx/execution/traits/detail/simd/vector_pack_get_set.hpp
     hpx/execution/traits/detail/simd/vector_pack_load_store.hpp
     hpx/execution/traits/detail/simd/vector_pack_type.hpp
     hpx/execution/traits/detail/vc/vector_pack_alignment_size.hpp
     hpx/execution/traits/detail/vc/vector_pack_all_any_none.hpp
     hpx/execution/traits/detail/vc/vector_pack_count_bits.hpp
     hpx/execution/traits/detail/vc/vector_pack_find.hpp
+    hpx/execution/traits/detail/vc/vector_pack_get_set.hpp
     hpx/execution/traits/detail/vc/vector_pack_load_store.hpp
     hpx/execution/traits/detail/vc/vector_pack_type.hpp
     hpx/execution/traits/executor_traits.hpp
@@ -78,6 +81,7 @@ set(execution_headers
     hpx/execution/traits/vector_pack_all_any_none.hpp
     hpx/execution/traits/vector_pack_count_bits.hpp
     hpx/execution/traits/vector_pack_find.hpp
+    hpx/execution/traits/vector_pack_get_set.hpp
     hpx/execution/traits/vector_pack_load_store.hpp
     hpx/execution/traits/vector_pack_type.hpp
 )
@@ -106,8 +110,9 @@ set(execution_compat_headers
     hpx/parallel/executors/static_chunk_size.hpp => hpx/execution.hpp
     hpx/parallel/traits/vector_pack_alignment_size.hpp => hpx/execution.hpp
     hpx/parallel/traits/vector_pack_all_any_none.hpp => hpx/execution.hpp
-    hpx/parallel/traits/vector_pack_find.hpp => hpx/execution.hpp
     hpx/parallel/traits/vector_pack_count_bits.hpp => hpx/execution.hpp
+    hpx/parallel/traits/vector_pack_find.hpp => hpx/execution.hpp
+    hpx/parallel/traits/vector_pack_get_set.hpp => hpx/execution.hpp
     hpx/parallel/traits/vector_pack_load_store.hpp => hpx/execution.hpp
     hpx/parallel/traits/vector_pack_type.hpp => hpx/execution.hpp
     hpx/sync_launch_policy_dispatch.hpp => hpx/execution.hpp
