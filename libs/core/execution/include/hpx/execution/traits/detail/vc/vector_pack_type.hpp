@@ -42,7 +42,7 @@ namespace hpx { namespace parallel { namespace traits {
         template <typename T, typename Abi>
         struct vector_pack_type<T, 1, Abi>
         {
-            typedef Vc::Scalar::Vector<T> type;
+            using type = T;
         };
     }    // namespace detail
 
@@ -50,26 +50,6 @@ namespace hpx { namespace parallel { namespace traits {
     template <typename T, std::size_t N, typename Abi>
     struct vector_pack_type : detail::vector_pack_type<T, N, Abi>
     {
-    };
-
-    // don't wrap types twice
-    template <typename T, std::size_t N, typename Abi1, typename Abi2>
-    struct vector_pack_type<Vc::Vector<T, Abi1>, N, Abi2>
-    {
-        typedef Vc::Vector<T, Abi1> type;
-    };
-
-    template <typename T, std::size_t N1, typename V, std::size_t W,
-        std::size_t N2, typename Abi>
-    struct vector_pack_type<Vc::SimdArray<T, N1, V, W>, N2, Abi>
-    {
-        typedef Vc::SimdArray<T, N1, V, W> type;
-    };
-
-    template <typename T, std::size_t N, typename Abi>
-    struct vector_pack_type<Vc::Scalar::Vector<T>, N, Abi>
-    {
-        typedef Vc::Scalar::Vector<T> type;
     };
 
     ////////////////////////////////////////////////////////////////////

@@ -66,7 +66,7 @@ namespace hpx { namespace parallel { namespace util { namespace detail {
             traits::vector_pack_size<pack1_type>::value ==
                     traits::vector_pack_size<pack2_type>::value &&
                 traits::vector_pack_alignment<pack1_type>::value ==
-                    traits::vector_pack_alignment<pack1_type>::value>
+                    traits::vector_pack_alignment<pack2_type>::value>
             type;
     };
 
