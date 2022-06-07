@@ -8,20 +8,24 @@
 
 #include <hpx/config.hpp>
 
-#if defined(HPX_HAVE_DATAPAR_STD_EXPERIMENTAL_SIMD)
-#include <cstddef>
+#if defined(HPX_HAVE_DATAPAR_EXPERIMENTAL_SIMD)
 
-#include <experimental/simd>
+#include <hpx/execution/traits/detail/simd/vector_pack_simd.hpp>
+
+#include <cstddef>
 
 namespace hpx { namespace parallel { namespace traits {
     ////////////////////////////////////////////////////////////////////
     template <typename T, typename Abi>
     HPX_HOST_DEVICE HPX_FORCEINLINE auto choose(
-        std::experimental::simd_mask<T, Abi> const& msk,
-        std::experimental::simd<T, Abi> const& v_true,
-        std::experimental::simd<T, Abi> const& v_false)
+        SIMD_NAMESPACE::simd_mask<T, Abi> const& msk,
+        SIMD_NAMESPACE::simd<T, Abi> const& v_true,
+        SIMD_NAMESPACE::simd<T, Abi> const& v_false)
     {
-        std::experimental::simd<T, Abi> v;
+#if defined(HPX_HAVE_DATAPAR_SVE)
+        return SIMD_NAMESPACE::choose(msk, v_true, v_true);
+#endif
+        SIMD_NAMESPACE::simd<T, Abi> v;
         where(msk, v) = v_true;
         where(!msk, v) = v_false;
         return v;
@@ -30,11 +34,16 @@ namespace hpx { namespace parallel { namespace traits {
     ////////////////////////////////////////////////////////////////////
     template <typename T, typename Abi>
     HPX_HOST_DEVICE HPX_FORCEINLINE void mask_assign(
-        std::experimental::simd_mask<T, Abi> const& msk,
-        std::experimental::simd<T, Abi>& v,
-        std::experimental::simd<T, Abi> const& val)
+        SIMD_NAMESPACE::simd_mask<T, Abi> const& msk,
+        SIMD_NAMESPACE::simd<T, Abi>& v,
+        SIMD_NAMESPACE::simd<T, Abi> const& val)
     {
+#if defined(HPX_HAVE_DATAPAR_STD_EXPERIMENTAL_SIMD)
         where(msk, v) = val;
+#endif
+#if defined(HPX_HAVE_DATAPAR_SVE)
+        SIMD_NAMESPACE::mask_assign(msk, v, val);
+#endif
     }
 }}}    // namespace hpx::parallel::traits
 
