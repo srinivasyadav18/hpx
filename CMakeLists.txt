@@ -571,9 +571,9 @@ set(DATAPAR_BACKEND "NONE")
 hpx_option(
   HPX_WITH_DATAPAR_BACKEND
   STRING
-  "Define which vectorization library should be used. Options are: DATAPAR_VC, DATAPAR_EVE, DATAPAR_STD_EXPERIMENTAL_SIMD"
+  "Define which vectorization library should be used. Options are: DATAPAR_VC, DATAPAR_EVE, DATAPAR_SVE, DATAPAR_STD_EXPERIMENTAL_SIMD"
   ${DATAPAR_BACKEND}
-  STRINGS "DATAPAR_VC;DATAPAR_EVE;DATAPAR_STD_EXPERIMENTAL_SIMD"
+  STRINGS "DATAPAR_VC;DATAPAR_EVE;DATAPAR_SVE;DATAPAR_STD_EXPERIMENTAL_SIMD"
 )
 
 # ##############################################################################
@@ -642,6 +642,41 @@ if("${HPX_WITH_DATAPAR_BACKEND}" STREQUAL "DATAPAR_EVE")
       ON ADVANCED
     )
     hpx_add_config_define(HPX_HAVE_DATAPAR_EVE)
+    hpx_add_config_define(HPX_HAVE_DATAPAR)
+  endif()
+endif()
+
+# ##############################################################################
+# HPX SVE configuration
+# ##############################################################################
+if("${HPX_WITH_DATAPAR_BACKEND}" STREQUAL "DATAPAR_SVE")
+  hpx_option(
+    HPX_WITH_DATAPAR_SVE BOOL "Use SVE as datapar library (default: ON)" ON
+    CATEGORY "Build Targets"
+    ADVANCED
+  )
+  hpx_option(
+    HPX_WITH_FETCH_DATAPAR_SVE
+    BOOL
+    "Use FetchContent to fetch SVE. By default an installed SVE will be used. (default: OFF)"
+    OFF
+    CATEGORY "Build Targets"
+    ADVANCED
+  )
+  hpx_option(
+    HPX_WITH_DATAPAR_SVE_TAG STRING "SVE repository tag or branch" "master"
+    CATEGORY "Build Targets"
+    ADVANCED
+  )
+
+  if(HPX_WITH_DATAPAR_SVE)
+    include(HPX_SetupSVE)
+    hpx_option(
+      HPX_WITH_DATAPAR BOOL
+      "Enable data parallel algorithm support using SVE library (default: ON)"
+      ON ADVANCED
+    )
+    hpx_add_config_define(HPX_HAVE_DATAPAR_SVE)
     hpx_add_config_define(HPX_HAVE_DATAPAR)
   endif()
 endif()
@@ -2106,6 +2141,11 @@ if("${HPX_WITH_DATAPAR_BACKEND}" STREQUAL "DATAPAR_STD_EXPERIMENTAL_SIMD")
       "Could not find std experimental/simd. Use CXX COMPILER GCC 11 OR CLANG 12 AND ABOVE "
     )
   endif()
+endif()
+
+if (("${HPX_WITH_DATAPAR_BACKEND}" STREQUAL "DATAPAR_STD_EXPERIMENTAL_SIMD") OR
+    ("${HPX_WITH_DATAPAR_BACKEND}" STREQUAL "DATAPAR_SVE"))
+    hpx_add_config_define(HPX_HAVE_DATAPAR_EXPERIMENTAL_SIMD)
 endif()
 
 if(HPX_WITH_DATAPAR)
