@@ -629,6 +629,14 @@ if("${HPX_WITH_DATAPAR_BACKEND}" STREQUAL "DATAPAR_EVE")
     CATEGORY "Build Targets"
     ADVANCED
   )
+  hpx_option(
+    HPX_WITH_DATAPAR_EVE_ALGORITHMS
+    BOOL
+    "Use eve algorithms"
+    OFF
+    CATEGORY "Build Targets"
+    ADVANCED
+  )
 
   if(HPX_WITH_DATAPAR_EVE)
     if(HPX_WITH_FETCH_DATAPAR_EVE)
@@ -643,6 +651,9 @@ if("${HPX_WITH_DATAPAR_BACKEND}" STREQUAL "DATAPAR_EVE")
     )
     hpx_add_config_define(HPX_HAVE_DATAPAR_EVE)
     hpx_add_config_define(HPX_HAVE_DATAPAR)
+    if(HPX_WITH_DATAPAR_EVE_ALGORITHMS)
+      hpx_add_config_define(HPX_HAVE_DATAPAR_EVE_ALGORITHMS)
+    endif()
   endif()
 endif()
 

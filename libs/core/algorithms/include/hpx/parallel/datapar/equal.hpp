@@ -23,6 +23,12 @@
 #include <type_traits>
 #include <utility>
 
+#if defined(HPX_HAVE_DATAPAR_EVE_ALGORITHMS)
+#include <eve/eve.hpp>
+#include <eve/algo/equal.hpp>
+#include <iostream>
+#endif
+
 namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
 
     ///////////////////////////////////////////////////////////////////////////
@@ -48,6 +54,16 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
         HPX_HOST_DEVICE HPX_FORCEINLINE static bool call(
             InIter1 first1, InIter1 last1, InIter2 first2, F&& f)
         {
+#if defined(HPX_HAVE_DATAPAR_EVE_ALGORITHMS)
+            auto first1_ptr = std::addressof(*first1);
+            auto first2_ptr = std::addressof(*first2);
+            auto last1_ptr = std::addressof(*last1);
+            auto last2_ptr = first1_ptr + std::distance(first1, last1);
+            auto rng1 = eve::algo::as_range(first1_ptr, last1_ptr);
+            auto rng2 = eve::algo::as_range(first2_ptr, last2_ptr);
+
+            return eve::algo::equal(rng1, rng2, f);
+#endif
             auto count = hpx::parallel::v1::detail::distance(first1, last1);
             util::cancellation_token<> tok;
             call(hpx::util::make_zip_iterator(first1, first2), count, tok,

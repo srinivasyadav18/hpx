@@ -411,7 +411,7 @@ namespace hpx {
 
             return hpx::parallel::v1::detail::equal_binary().call(
                 HPX_FORWARD(ExPolicy, policy), first1, last1, first2, last2,
-                hpx::parallel::v1::detail::equal_to{},
+                std::equal_to{},
                 hpx::parallel::util::projection_identity{},
                 hpx::parallel::util::projection_identity{});
         }
@@ -464,7 +464,7 @@ namespace hpx {
 
             return hpx::parallel::v1::detail::equal().call(
                 HPX_FORWARD(ExPolicy, policy), first1, last1, first2,
-                hpx::parallel::v1::detail::equal_to{});
+                std::equal_to{});
         }
 
         // clang-format off
@@ -510,7 +510,7 @@ namespace hpx {
 
             return hpx::parallel::v1::detail::equal_binary().call(
                 hpx::execution::seq, first1, last1, first2, last2,
-                hpx::parallel::v1::detail::equal_to{},
+                std::equal_to{},
                 hpx::parallel::util::projection_identity{},
                 hpx::parallel::util::projection_identity{});
         }
@@ -554,7 +554,7 @@ namespace hpx {
                 "Requires at least forward iterator.");
 
             return hpx::parallel::v1::detail::equal().call(hpx::execution::seq,
-                first1, last1, first2, hpx::parallel::v1::detail::equal_to{});
+                first1, last1, first2, std::equal_to{});
         }
     } equal{};
 }    // namespace hpx

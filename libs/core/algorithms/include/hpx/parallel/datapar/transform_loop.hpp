@@ -27,6 +27,12 @@
 #include <type_traits>
 #include <utility>
 
+#if defined(HPX_HAVE_DATAPAR_EVE_ALGORITHMS)
+#include <eve/eve.hpp>
+#include <eve/algo/transform.hpp>
+#include <iostream>
+#endif
+
 namespace hpx { namespace parallel { namespace util {
     namespace detail {
         ///////////////////////////////////////////////////////////////////////
@@ -118,6 +124,19 @@ namespace hpx { namespace parallel { namespace util {
                 std::pair<InIter, OutIter>>::type
             call(InIter first, std::size_t count, OutIter dest, F&& f)
             {
+#if defined(HPX_HAVE_DATAPAR_EVE_ALGORITHMS)
+                auto first_ptr = std::addressof(*first);
+                auto last_ptr = first_ptr + count;
+                auto dest_ptr = std::addressof(*dest);
+                auto last2_ptr = dest_ptr + count;
+
+                InIter last = first + count;
+                OutIter last2 = dest + count;
+                auto rng1 = eve::algo::as_range(first_ptr, last_ptr);
+                auto rng2 = eve::algo::as_range(dest_ptr, last2_ptr);
+                eve::algo::transform_to(rng1, rng2, f);
+                return {last, last2};
+#else
                 std::size_t len = count;
 
                 for (/* */;
@@ -143,6 +162,7 @@ namespace hpx { namespace parallel { namespace util {
                 }
 
                 return std::make_pair(HPX_MOVE(first), HPX_MOVE(dest));
+#endif
             }
 
             template <typename InIter, typename OutIter, typename F>

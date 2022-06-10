@@ -19,6 +19,12 @@
 #include <type_traits>
 #include <utility>
 
+#if defined(HPX_HAVE_DATAPAR_EVE_ALGORITHMS)
+#include <eve/eve.hpp>
+#include <eve/algo/fill.hpp>
+#include <iostream>
+#endif
+
 namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
 
     ///////////////////////////////////////////////////////////////////////////
@@ -29,6 +35,11 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
             util::detail::iterator_datapar_compatible<Iter>::value, Iter>::type
         call(ExPolicy&& policy, Iter first, Sent last, T const& val)
         {
+#if defined(HPX_HAVE_DATAPAR_EVE_ALGORITHMS)
+            auto rng = eve::algo::as_range(std::addressof(*first), std::addressof(*last));
+            eve::algo::fill(rng, val);
+            return first + std::distance(first, last);
+#endif
             hpx::parallel::util::loop_ind(HPX_FORWARD(ExPolicy, policy), first,
                 last, [&val](auto& v) { v = val; });
             return first;
@@ -55,6 +66,12 @@ namespace hpx { namespace parallel { inline namespace v1 { namespace detail {
             util::detail::iterator_datapar_compatible<Iter>::value, Iter>::type
         call(ExPolicy&&, Iter first, std::size_t count, T const& val)
         {
+#if defined(HPX_HAVE_DATAPAR_EVE_ALGORITHMS)
+            auto last = first + count;
+            auto rng = eve::algo::as_range(std::addressof(*first), std::addressof(*last));
+            eve::algo::fill(rng, val);
+            return last;
+#endif
             hpx::parallel::util::loop_n_ind<std::decay_t<ExPolicy>>(
                 first, count, [&val](auto& v) { v = val; });
             return first;
