@@ -4,15 +4,15 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-if(HPX_WITH_DATAPAR_SVE AND NOT TARGET SVE::sve)
-  if(HPX_WITH_FETCH_DATAPAR_SVE)
+if(HPX_WITH_SVE AND NOT TARGET SVE::sve)
+  if(HPX_WITH_FETCH_SVE)
     if(FETCHCONTENT_SOURCE_DIR_SVE)
       hpx_info(
-        "HPX_WITH_FETCH_DATAPAR_SVE=${HPX_WITH_FETCH_DATAPAR_SVE}, SVE will be used through CMake's FetchContent and installed alongside HPX (FETCHCONTENT_SOURCE_DIR_SVE=${FETCHCONTENT_SOURCE_DIR_SVE})"
+        "HPX_WITH_FETCH_SVE=${HPX_WITH_FETCH_SVE}, SVE will be used through CMake's FetchContent and installed alongside HPX (FETCHCONTENT_SOURCE_DIR_SVE=${FETCHCONTENT_SOURCE_DIR_SVE})"
       )
     else()
       hpx_info(
-        "HPX_WITH_FETCH_DATAPAR_SVE=${HPX_WITH_FETCH_DATAPAR_SVE}, SVE will be fetched using CMake's FetchContent and installed alongside HPX (HPX_WITH_DATAPAR_SVE_TAG=${HPX_WITH_DATAPAR_SVE_TAG})"
+        "HPX_WITH_FETCH_SVE=${HPX_WITH_FETCH_SVE}, SVE will be fetched using CMake's FetchContent and installed alongside HPX (HPX_WITH_SVE_TAG=${HPX_WITH_SVE_TAG})"
       )
     endif()
 
@@ -20,7 +20,7 @@ if(HPX_WITH_DATAPAR_SVE AND NOT TARGET SVE::sve)
     FetchContent_Declare(
       sve
       GIT_REPOSITORY https://github.com/srinivasyadav18/sve.git
-      GIT_TAG ${HPX_WITH_DATAPAR_SVE_TAG}
+      GIT_TAG ${HPX_WITH_SVE_TAG}
     )
     
     FetchContent_MakeAvailable(sve)
