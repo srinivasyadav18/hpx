@@ -325,7 +325,7 @@ namespace hpx::execution {
             policy_ = HPX_MOVE(policy);
         }
 
-        [[nodiscard]] constexpr Policy const& policy() const noexcept
+        constexpr Policy const& policy() const noexcept
         {
             return policy_;
         }
@@ -579,12 +579,10 @@ namespace hpx::execution {
             hpx::execution::experimental::is_scheduling_property_v<Tag>
         )>
     // clang-format on
-    auto tag_invoke(
-        Tag tag, parallel_policy_executor<Policy> const& exec, Property&& prop)
-        -> decltype(std::declval<parallel_policy_executor<Policy>>().policy(
-                        std::declval<Tag>()(
-                            std::declval<Policy>(), std::declval<Property>())),
-            parallel_policy_executor<Policy>())
+    auto tag_invoke(Tag tag, parallel_policy_executor<Policy> const& exec,
+        Property&& prop) -> decltype(std::declval<Tag>()(std::declval<Policy>(),
+                                         std::declval<Property>()),
+        parallel_policy_executor<Policy>())
     {
         auto exec_with_prop = exec;
         exec_with_prop.policy(tag(exec.policy(), HPX_FORWARD(Property, prop)));
@@ -604,9 +602,7 @@ namespace hpx::execution {
     }
 
     using parallel_executor = parallel_policy_executor<hpx::launch>;
-}    // namespace hpx::execution
-
-namespace hpx::parallel::execution {
+}}    // namespace hpx::execution
 
     /// \cond NOINTERNAL
     template <typename Policy>

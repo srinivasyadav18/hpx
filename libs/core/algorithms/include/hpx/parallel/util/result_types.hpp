@@ -1,4 +1,4 @@
-//  Copyright (c) 2020-2023 Hartmut Kaiser
+//  Copyright (c) 2020-2022 Hartmut Kaiser
 //  Copyright (c) 2021 Giannis Gonidelis
 //  Copyright (c) 2021 Chuanqiu He
 //
@@ -134,10 +134,8 @@ namespace hpx::parallel::util {
     }
 
     namespace functional {
-
         struct get_second_element
         {
-            // clang-format off
             template <typename T>
             auto operator()(T&& val) const -> decltype(
                 hpx::parallel::util::get_second_element(HPX_FORWARD(T, val)))
@@ -145,7 +143,6 @@ namespace hpx::parallel::util {
                 return hpx::parallel::util::get_second_element(
                     HPX_FORWARD(T, val));
             }
-            // clang-format on
         };
     }    // namespace functional
 
@@ -163,7 +160,7 @@ namespace hpx::parallel::util {
             HPX_FORWARD(Sender, sender), functional::get_second_element{});
     }
 
-    // converts a in_out_result into a iterator_range
+    // converst a in_out_result into a iterator_range
     template <typename I, typename O>
     hpx::util::iterator_range<I, O> get_subrange(in_out_result<I, O> const& ior)
     {

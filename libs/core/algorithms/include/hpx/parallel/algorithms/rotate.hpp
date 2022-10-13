@@ -208,7 +208,7 @@ namespace hpx {
 #include <type_traits>
 #include <utility>
 
-namespace hpx::parallel {
+namespace hpx { namespace parallel { inline namespace v1 {
 
     ///////////////////////////////////////////////////////////////////////////
     // rotate
@@ -219,18 +219,12 @@ namespace hpx::parallel {
         decltype(auto) rotate_helper(
             ExPolicy policy, FwdIter first, FwdIter new_first, Sent last)
         {
-            std::ptrdiff_t const size_left = detail::distance(first, new_first);
+            std::ptrdiff_t size_left = detail::distance(first, new_first);
             std::ptrdiff_t size_right = detail::distance(new_first, last);
 
             // get number of cores currently used
-            std::size_t const cores =
-                parallel::execution::processing_units_count(policy.parameters(),
-                    policy.executor(), hpx::chrono::null_duration,
-                    size_left + size_right);
-
-            // get currently used first core
-            std::size_t first_core =
-                hpx::execution::experimental::get_first_core(policy);
+            std::size_t cores = parallel::execution::processing_units_count(
+                policy.parameters(), policy.executor());
 
             // calculate number of cores to be used for left and right section
             // proportional to the ratio of their sizes
@@ -254,6 +248,10 @@ namespace hpx::parallel {
             // invoke the reverse operations on the left and right sections
             // concurrently
             auto p = policy(hpx::execution::task);
+            auto left_policy =
+                execution::with_processing_units_count(p, cores_left);
+            auto right_policy =
+                execution::with_processing_units_count(p, cores_right);
 
             auto left_policy =
                 execution::with_processing_units_count(p, cores_left);

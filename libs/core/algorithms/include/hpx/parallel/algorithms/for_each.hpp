@@ -417,7 +417,7 @@ namespace hpx::parallel {
             }
 
             template <typename ExPolicy, typename FwdIter, typename F,
-                typename Proj = hpx::identity>
+                typename Proj = util::projection_identity>
             static decltype(auto) parallel(ExPolicy&& policy, FwdIter first,
                 std::size_t count, F&& f, Proj&& proj /* = Proj()*/)
             {

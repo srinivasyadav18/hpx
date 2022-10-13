@@ -220,7 +220,7 @@ namespace hpx::execution::experimental {
             std::declval<BaseExecutor>(), std::declval<Property>())))
     {
         return annotating_executor<BaseExecutor>(
-            tag(exec.get_executor(), HPX_FORWARD(Property, prop)));
+            tag(exec.exec_, HPX_FORWARD(Property, prop)));
     }
 
     // clang-format off
@@ -232,7 +232,7 @@ namespace hpx::execution::experimental {
     auto tag_invoke(Tag tag, annotating_executor<BaseExecutor> const& exec)
         -> decltype(std::declval<Tag>()(std::declval<BaseExecutor>()))
     {
-        return tag(exec.get_executor());
+        return tag(exec.exec_);
     }
 
     ///////////////////////////////////////////////////////////////////////////

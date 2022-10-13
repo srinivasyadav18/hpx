@@ -176,11 +176,10 @@ namespace hpx::parallel::detail {
             using result_handler =
                 hpx::parallel::util::detail::algorithm_result<ExPolicy,
                     local_result_type>;
-
-            using result = decltype(Derived::parallel(
+            using result_type = decltype(Derived::parallel(
                 HPX_FORWARD(ExPolicy, policy), HPX_FORWARD(Args, args)...));
 
-            if constexpr (std::is_void_v<result>)
+            if constexpr (std::is_void_v<result_type>)
             {
                 Derived::parallel(
                     HPX_FORWARD(ExPolicy, policy), HPX_FORWARD(Args, args)...);

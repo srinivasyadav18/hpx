@@ -71,12 +71,10 @@ add_hpx_module(
     hpx_config
     hpx_errors
     hpx_functional
-    hpx_logging
     hpx_memory
     hpx_serialization
     hpx_synchronization
     hpx_timing
-    hpx_threading_base
     hpx_type_support
   CMAKE_SUBDIRS examples tests
 )

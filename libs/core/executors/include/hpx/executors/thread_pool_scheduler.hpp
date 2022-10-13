@@ -100,13 +100,7 @@ namespace hpx::execution::experimental {
             return pool_;
         }
 
-        // clang-format off
-        template <typename Executor_,
-            HPX_CONCEPT_REQUIRES_(
-                std::is_convertible_v<Executor_, thread_pool_policy_scheduler>
-            )>
-        // clang-format on
-        friend constexpr auto tag_invoke(
+        friend constexpr thread_pool_policy_scheduler tag_invoke(
             hpx::parallel::execution::with_processing_units_count_t,
             Executor_ const& scheduler, std::size_t num_cores) noexcept
         {
@@ -407,16 +401,15 @@ namespace hpx::execution::experimental {
 
     // support all properties exposed by the embedded policy
     // clang-format off
-    template <typename Tag, typename Policy, typename Property,
+    template <typename Tag,  typename Policy,typename Property,
         HPX_CONCEPT_REQUIRES_(
             hpx::execution::experimental::is_scheduling_property_v<Tag>
         )>
     // clang-format on
     auto tag_invoke(Tag tag,
         thread_pool_policy_scheduler<Policy> const& scheduler, Property&& prop)
-        -> decltype(std::declval<thread_pool_policy_scheduler<Policy>>().policy(
-                        std::declval<Tag>()(
-                            std::declval<Policy>(), std::declval<Property>())),
+        -> decltype(std::declval<Tag>()(
+                        std::declval<Policy>(), std::declval<Property>()),
             thread_pool_policy_scheduler<Policy>())
     {
         auto scheduler_with_prop = scheduler;

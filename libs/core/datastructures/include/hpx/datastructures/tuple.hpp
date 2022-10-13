@@ -597,7 +597,7 @@ namespace hpx {
     };
 #endif
 
-    template <typename T>
+    template <class T>
     inline constexpr std::size_t tuple_size_v = tuple_size<T>::value;
 
     // template <size_t I, class Tuple>
