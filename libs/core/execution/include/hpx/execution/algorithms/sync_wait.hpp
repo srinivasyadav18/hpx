@@ -262,6 +262,63 @@ namespace hpx::execution::experimental::detail {
                 return {r.loop.get_scheduler()};
             }
         };
+
+        shared_state& state;
+        run_loop& loop;
+
+        template <typename Error>
+        friend void tag_invoke(
+            set_error_t, sync_wait_receiver&& r, Error&& error) noexcept
+        {
+            using error_t = std::decay_t<Error>;
+            if constexpr (std::is_same_v<error_t, std::exception_ptr>)
+            {
+                r.state.value.template emplace<error_type>(
+                    HPX_FORWARD(Error, error));
+            }
+            else if constexpr (std::is_same_v<error_t, std::error_code>)
+            {
+                r.state.value.template emplace<error_type>(
+                    std::exception_ptr(std::system_error(error)));
+            }
+            else
+            {
+                try
+                {
+                    throw error;
+                }
+                catch (...)
+                {
+                    r.state.value.template emplace<error_type>(
+                        std::current_exception());
+                }
+            }
+
+            r.loop.finish();
+        }
+
+        friend void tag_invoke(
+            set_stopped_t tag, sync_wait_receiver&& r) noexcept
+        {
+            r.state.value.template emplace<stopped_type>(tag);
+            r.loop.finish();
+        }
+
+        template <typename... Us>
+        friend void tag_invoke(
+            set_value_t, sync_wait_receiver&& r, Us&&... us) noexcept
+        {
+            r.state.value.template emplace<result_type>(
+                hpx::forward_as_tuple(HPX_FORWARD(Us, us)...));
+            r.loop.finish();
+        }
+
+        friend sync_wait_receiver_env tag_invoke(
+            hpx::execution::experimental::get_env_t,
+            sync_wait_receiver const& r) noexcept
+        {
+            return {r.loop.get_scheduler()};
+        }
     };
 }    // namespace hpx::execution::experimental::detail
 

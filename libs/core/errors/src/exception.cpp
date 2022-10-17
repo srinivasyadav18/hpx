@@ -1,4 +1,4 @@
-//  Copyright (c) 2007-2023 Hartmut Kaiser
+//  Copyright (c) 2007-2022 Hartmut Kaiser
 //  Copyright (c)      2011 Bryce Lelbach
 //
 //  SPDX-License-Identifier: BSL-1.0
@@ -12,6 +12,7 @@
 #include <hpx/errors/exception.hpp>
 #include <hpx/errors/exception_info.hpp>
 #include <hpx/errors/exception_list.hpp>
+#include <hpx/modules/format.hpp>
 #include <hpx/modules/logging.hpp>
 
 #if defined(HPX_WINDOWS)
@@ -393,9 +394,9 @@ namespace hpx {
         {
             return "thread_interrupted";
         }
-        catch (std::exception const& ex)
+        catch (std::exception const& e)
         {
-            return get_error_what(ex);
+            return get_error_what(e);
         }
         catch (...)
         {

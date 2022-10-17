@@ -150,7 +150,7 @@ namespace hpx {
         {
             hpx::exception ex;
             {
-                unlock_guard<std::unique_lock<mutex_type>> ul(l);
+                util::unlock_guard<std::unique_lock<mutex_type>> ul(l);
                 ex = hpx::exception(hpx::get_error(e), hpx::get_error_what(e));
             }
 

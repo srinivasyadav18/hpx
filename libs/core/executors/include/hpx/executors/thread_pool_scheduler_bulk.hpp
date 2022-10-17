@@ -317,7 +317,7 @@ namespace hpx::execution::experimental::detail {
             {
                 do_work();
             }
-            catch (std::bad_alloc const&)
+            catch (std::bad_alloc const& e)
             {
                 op_state->bad_alloc_thrown = true;
             }
