@@ -168,10 +168,8 @@ template <typename S1, typename S2,
 task<int> async_answer(S1 s1, S2 s2)
 {
     // Senders are implicitly awaitable (in this coroutine type):
-    // clang-format off
     co_await(S2 &&) s2;
     co_return co_await(S1 &&) s1;
-    // clang-format on
 }
 
 // clang-format off
@@ -187,7 +185,6 @@ int main()
 
     // clang-format off
     {
-        // clang-format off
         static_assert(
             std::is_same_v<single_sender_value_t<non_awaitable_sender<decltype(
                                signature_all(std::exception_ptr(), int()))>>,

@@ -1423,12 +1423,7 @@ namespace hpx::execution::experimental {
             try
             {
                 if constexpr (std::is_void_v<result_t>)
-                {
-                    // clang-format off
-                    co_await (co_await HPX_FORWARD(Awaitable, await),
-                        co_call(set_value, HPX_FORWARD(Receiver, rcvr)));
-                    // clang-format on
-                }
+                    co_yield(co_await HPX_FORWARD(Awaitable, await), fun());
                 else
                 {
                     co_await co_call(set_value, HPX_FORWARD(Receiver, rcvr),
