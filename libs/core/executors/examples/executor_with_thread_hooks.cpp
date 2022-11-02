@@ -183,7 +183,7 @@ namespace executor_example {
     };
 
     template <typename Executor, typename OnStart, typename OnStop>
-    executor_with_thread_hooks(Executor&&, OnStart&&, OnStop&&)
+    executor_with_thread_hooks(Executor&&, OnStart&&, OnStop &&)
         -> executor_with_thread_hooks<std::decay_t<Executor>>;
 }    // namespace executor_example
 

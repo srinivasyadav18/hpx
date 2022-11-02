@@ -8,10 +8,10 @@
 // Verify that a wrapping executor does not go out of scope prematurely when
 // used with a seq(task) execution policy.
 
-#include <hpx/algorithm.hpp>
 #include <hpx/assert.hpp>
-#include <hpx/execution.hpp>
-#include <hpx/init.hpp>
+#include <hpx/local/algorithm.hpp>
+#include <hpx/local/execution.hpp>
+#include <hpx/local/init.hpp>
 
 #include <algorithm>
 #include <atomic>
@@ -34,7 +34,7 @@ namespace test {
         template <typename Executor,
             typename Enable = std::enable_if_t<
                 !std::is_same_v<wrapping_executor, std::decay_t<Executor>>>>
-        explicit wrapping_executor(Executor&& exec)
+        wrapping_executor(Executor&& exec)
           : exec_(std::forward<Executor>(exec))
         {
         }
@@ -137,7 +137,7 @@ namespace test {
 
 ///////////////////////////////////////////////////////////////////////////////
 // simple forwarding implementations of executor traits
-namespace hpx::parallel::execution {
+namespace hpx { namespace parallel { namespace execution {
 
     template <typename BaseExecutor>
     struct is_one_way_executor<test::wrapping_executor<BaseExecutor>>
@@ -169,7 +169,7 @@ namespace hpx::parallel::execution {
       : is_bulk_two_way_executor<std::decay_t<BaseExecutor>>
     {
     };
-}    // namespace hpx::parallel::execution
+}}}    // namespace hpx::parallel::execution
 
 int hpx_main()
 {

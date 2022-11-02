@@ -153,18 +153,21 @@ namespace hpx::parallel::detail {
 
                 // run the launched task on the requested executor
                 return result_handler::get(execution::async_execute(
-                    exec, derived(), policy, HPX_FORWARD(Args, args)...));
+                    HPX_FORWARD(decltype(exec), exec), derived(),
+                    HPX_FORWARD(ExPolicy, policy), HPX_FORWARD(Args, args)...));
             }
             else if constexpr (std::is_void_v<local_result_type>)
             {
-                execution::sync_execute(
-                    exec, derived(), policy, HPX_FORWARD(Args, args)...);
+                execution::sync_execute(HPX_FORWARD(decltype(exec), exec),
+                    derived(), HPX_FORWARD(ExPolicy, policy),
+                    HPX_FORWARD(Args, args)...);
                 return result_handler::get();
             }
             else
             {
                 return result_handler::get(execution::sync_execute(
-                    exec, derived(), policy, HPX_FORWARD(Args, args)...));
+                    HPX_FORWARD(decltype(exec), exec), derived(),
+                    HPX_FORWARD(ExPolicy, policy), HPX_FORWARD(Args, args)...));
             }
         }
 
