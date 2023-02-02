@@ -232,11 +232,13 @@ int hpx_main()
     auto on_start = [&]() { ++starts; };
     auto on_stop = [&]() { ++stops; };
 
+    auto pol = hpx::execution::par(hpx::execution::task);
     auto exec = executor_example::executor_with_thread_hooks(
-        hpx::execution::par.executor(), on_start, on_stop);
+        pol.executor(), on_start, on_stop);
 
-    hpx::experimental::for_loop(
-        hpx::execution::par.on(exec), 0, v.size(), [](std::size_t) {});
+    auto f = hpx::experimental::for_loop(
+        pol.on(exec), 0, v.size(), [](std::size_t) {});
+    f.get();
 
     std::cout << "Executed " << starts.load() << " starts and " << stops.load()
               << " stops\n";
