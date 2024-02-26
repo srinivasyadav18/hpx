@@ -8,11 +8,13 @@
 
 #include <atomic>
 #include <cstdint>
+#include <cassert>
 
 template <typename T>
 void test_atomic()
 {
     std::atomic<T> a;
+    assert(a.is_lock_free());
     a.store(T{});
     T i = a.load();
     (void)i;

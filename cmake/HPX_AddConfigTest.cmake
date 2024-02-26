@@ -332,31 +332,6 @@ function(hpx_check_for_cxx11_std_atomic_128bit)
     LIBRARIES ${HPX_CXX11_STD_ATOMIC_LIBRARIES}
     FILE ${ARGN}
   )
-  if(NOT MSVC)
-    # Sometimes linking against libatomic is required, if the platform doesn't
-    # support lock-free atomics. We already know that MSVC works
-    if(NOT HPX_WITH_CXX11_ATOMIC_128BIT)
-      set(HPX_CXX11_STD_ATOMIC_LIBRARIES
-          atomic
-          CACHE STRING "std::atomics need separate library" FORCE
-      )
-      unset(HPX_WITH_CXX11_ATOMIC_128BIT CACHE)
-      add_hpx_config_test(
-        HPX_WITH_CXX11_ATOMIC_128BIT
-        SOURCE cmake/tests/cxx11_std_atomic_128bit.cpp
-        LIBRARIES ${HPX_CXX11_STD_ATOMIC_LIBRARIES}
-        FILE ${ARGN}
-      )
-      if(NOT HPX_WITH_CXX11_ATOMIC_128BIT)
-        # Adding -latomic did not help, so we don't attempt to link to it later
-        # but only if normal atomics don't require it
-        if(NOT __std_atomic_libraries)
-          unset(HPX_CXX11_STD_ATOMIC_LIBRARIES CACHE)
-        endif()
-        unset(HPX_WITH_CXX11_ATOMIC_128BIT CACHE)
-      endif()
-    endif()
-  endif()
   unset(__std_atomic_libraries CACHE)
 endfunction()
 
