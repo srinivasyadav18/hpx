@@ -121,6 +121,7 @@ namespace hpx::parallel::util::detail {
             ++it;
         }
 
+
         template <typename F>
         HPX_HOST_DEVICE HPX_FORCEINLINE static constexpr void callv(
             F&& f, Iter& it)
@@ -129,6 +130,57 @@ namespace hpx::parallel::util::detail {
             HPX_INVOKE(f, &tmp);
             traits::vector_pack_store<V, value_type>::aligned(tmp, it);
             std::advance(it, traits::vector_pack_size_v<V>);
+        }
+
+        template <typename F>
+        HPX_HOST_DEVICE HPX_FORCEINLINE static constexpr void call2v(
+            F&& f, Iter& it)
+        {
+            constexpr int vlen = traits::vector_pack_size_v<V>;
+            V tmp(traits::vector_pack_load<V, value_type>::aligned(it));
+            V tmp1(traits::vector_pack_load<V, value_type>::aligned(it + vlen));
+            HPX_INVOKE(f, &tmp);
+            HPX_INVOKE(f, &tmp1);
+            traits::vector_pack_store<V, value_type>::aligned(tmp, it);
+            traits::vector_pack_store<V, value_type>::aligned(tmp1, it + vlen);
+            std::advance(it, 2*vlen);
+        }
+
+        template <typename F>
+        HPX_HOST_DEVICE HPX_FORCEINLINE static constexpr void call3v(
+            F&& f, Iter& it)
+        {
+            constexpr int vlen = traits::vector_pack_size_v<V>;
+            V tmp(traits::vector_pack_load<V, value_type>::aligned(it));
+            V tmp1(traits::vector_pack_load<V, value_type>::aligned(it + vlen));
+            V tmp2(traits::vector_pack_load<V, value_type>::aligned(it + 2*vlen));
+            HPX_INVOKE(f, &tmp);
+            HPX_INVOKE(f, &tmp1);
+            HPX_INVOKE(f, &tmp2);
+            traits::vector_pack_store<V, value_type>::aligned(tmp, it);
+            traits::vector_pack_store<V, value_type>::aligned(tmp1, it + vlen);
+            traits::vector_pack_store<V, value_type>::aligned(tmp2, it + 2*vlen);
+            std::advance(it, 3*vlen);
+        }
+
+        template <typename F>
+        HPX_HOST_DEVICE HPX_FORCEINLINE static constexpr void call4v(
+            F&& f, Iter& it)
+        {
+            constexpr int vlen = traits::vector_pack_size_v<V>;
+            V tmp(traits::vector_pack_load<V, value_type>::aligned(it));
+            V tmp1(traits::vector_pack_load<V, value_type>::aligned(it + vlen));
+            V tmp2(traits::vector_pack_load<V, value_type>::aligned(it + 2*vlen));
+            V tmp3(traits::vector_pack_load<V, value_type>::aligned(it + 3*vlen));
+            HPX_INVOKE(f, &tmp);
+            HPX_INVOKE(f, &tmp1);
+            HPX_INVOKE(f, &tmp2);
+            HPX_INVOKE(f, &tmp3);
+            traits::vector_pack_store<V, value_type>::aligned(tmp, it);
+            traits::vector_pack_store<V, value_type>::aligned(tmp1, it + vlen);
+            traits::vector_pack_store<V, value_type>::aligned(tmp2, it + 2*vlen);
+            traits::vector_pack_store<V, value_type>::aligned(tmp3, it + 3*vlen);
+            std::advance(it, 4*vlen);
         }
     };
 
@@ -195,6 +247,57 @@ namespace hpx::parallel::util::detail {
             HPX_INVOKE(f, tmp);
             traits::vector_pack_store<V, value_type>::aligned(tmp, it);
             std::advance(it, traits::vector_pack_size_v<V>);
+        }
+
+        template <typename F>
+        HPX_HOST_DEVICE HPX_FORCEINLINE static constexpr void call2v(
+            F&& f, Iter& it)
+        {
+            constexpr int vlen = traits::vector_pack_size_v<V>;
+            V tmp(traits::vector_pack_load<V, value_type>::aligned(it));
+            V tmp1(traits::vector_pack_load<V, value_type>::aligned(it + vlen));
+            HPX_INVOKE(f, tmp);
+            HPX_INVOKE(f, tmp1);
+            traits::vector_pack_store<V, value_type>::aligned(tmp, it);
+            traits::vector_pack_store<V, value_type>::aligned(tmp1, it + vlen);
+            std::advance(it, 2*vlen);
+        }
+
+        template <typename F>
+        HPX_HOST_DEVICE HPX_FORCEINLINE static constexpr void call3v(
+            F&& f, Iter& it)
+        {
+            constexpr int vlen = traits::vector_pack_size_v<V>;
+            V tmp(traits::vector_pack_load<V, value_type>::aligned(it));
+            V tmp1(traits::vector_pack_load<V, value_type>::aligned(it + vlen));
+            V tmp2(traits::vector_pack_load<V, value_type>::aligned(it + 2*vlen));
+            HPX_INVOKE(f, tmp);
+            HPX_INVOKE(f, tmp1);
+            HPX_INVOKE(f, tmp2);
+            traits::vector_pack_store<V, value_type>::aligned(tmp, it);
+            traits::vector_pack_store<V, value_type>::aligned(tmp1, it + vlen);
+            traits::vector_pack_store<V, value_type>::aligned(tmp2, it + 2*vlen);
+            std::advance(it, 3*vlen);
+        }
+
+        template <typename F>
+        HPX_HOST_DEVICE HPX_FORCEINLINE static constexpr void call4v(
+            F&& f, Iter& it)
+        {
+            constexpr int vlen = traits::vector_pack_size_v<V>;
+            V tmp(traits::vector_pack_load<V, value_type>::aligned(it));
+            V tmp1(traits::vector_pack_load<V, value_type>::aligned(it + vlen));
+            V tmp2(traits::vector_pack_load<V, value_type>::aligned(it + 2*vlen));
+            V tmp3(traits::vector_pack_load<V, value_type>::aligned(it + 3*vlen));
+            HPX_INVOKE(f, tmp);
+            HPX_INVOKE(f, tmp1);
+            HPX_INVOKE(f, tmp2);
+            HPX_INVOKE(f, tmp3);
+            traits::vector_pack_store<V, value_type>::aligned(tmp, it);
+            traits::vector_pack_store<V, value_type>::aligned(tmp1, it + vlen);
+            traits::vector_pack_store<V, value_type>::aligned(tmp2, it + 2*vlen);
+            traits::vector_pack_store<V, value_type>::aligned(tmp3, it + 3*vlen);
+            std::advance(it, 4*vlen);
         }
     };
 

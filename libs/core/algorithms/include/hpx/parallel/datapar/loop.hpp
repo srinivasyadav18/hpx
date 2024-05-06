@@ -57,11 +57,29 @@ namespace hpx::parallel::util {
                     }
 
                     constexpr std::size_t size = traits::vector_pack_size_v<V>;
+                    int64_t nvec = (last - first) / size;
+                    while((nvec - 4) > 0)
+                    {
+                        datapar_loop_step<Begin>::call4v(f, first);
+                        nvec -= 4;
+                    }
 
-                    End const lastV = last - (size + 1);
-                    while (first < lastV)
+                    while((nvec - 3) > 0)
+                    {
+                        datapar_loop_step<Begin>::call3v(f, first);
+                        nvec -= 3;
+                    }
+
+                    while((nvec - 2) > 0)
+                    {
+                        datapar_loop_step<Begin>::call2v(f, first);
+                        nvec -= 2;
+                    }
+
+                    while (nvec)
                     {
                         datapar_loop_step<Begin>::callv(f, first);
+                        --nvec;
                     }
 
                     while (first != last)
@@ -265,18 +283,40 @@ namespace hpx::parallel::util {
                     }
 
                     constexpr std::size_t size = traits::vector_pack_size_v<V>;
+                    int64_t nvec = len / size;
 
-                    for (auto len_v =
-                             static_cast<std::int64_t>(len - (size + 1));
-                         len_v > 0;
-                         len_v -= static_cast<std::int64_t>(size), len -= size)
+                    while((nvec - 4) >= 0)
                     {
-                        datapar_loop_step<InIter>::callv(f, first);
+                        datapar_loop_step<InIter>::call4v(f, first);
+                        nvec -= 4;
+                        len -= 4 * size;
                     }
 
-                    for (/* */; len != 0; --len)
+                    while((nvec - 3) >= 0)
+                    {
+                        datapar_loop_step<InIter>::call3v(f, first);
+                        nvec -= 3;
+                        len -= 3 * size;
+                    }
+
+                    while((nvec - 2) >= 0)
+                    {
+                        datapar_loop_step<InIter>::call2v(f, first);
+                        nvec -= 2;
+                        len -= 2 * size;
+                    }
+                    
+                    while (nvec)
+                    {
+                        datapar_loop_step<InIter>::callv(f, first);
+                        --nvec;
+                        len -= size;
+                    }
+
+                    while (len != 0)
                     {
                         datapar_loop_step<InIter>::call1(f, first);
+                        --len;
                     }
                     return first;
                 }
@@ -331,17 +371,40 @@ namespace hpx::parallel::util {
 
                     constexpr std::size_t size = traits::vector_pack_size_v<V>;
 
-                    for (auto len_v =
-                             static_cast<std::int64_t>(len - (size + 1));
-                         len_v > 0;
-                         len_v -= static_cast<std::int64_t>(size), len -= size)
+                    int64_t nvec = len / size;
+
+                    while((nvec - 4) >= 0)
                     {
-                        datapar_loop_step_ind<InIter>::callv(f, first);
+                        datapar_loop_step_ind<InIter>::call4v(f, first);
+                        nvec -= 4;
+                        len -= 4 * size;
                     }
 
-                    for (/* */; len != 0; --len)
+                    while((nvec - 3) >= 0)
+                    {
+                        datapar_loop_step_ind<InIter>::call3v(f, first);
+                        nvec -= 3;
+                        len -= 3 * size;
+                    }
+
+                    while((nvec - 2) >= 0)
+                    {
+                        datapar_loop_step_ind<InIter>::call2v(f, first);
+                        nvec -= 2;
+                        len -= 2 * size;
+                    }
+                    
+                    while (nvec)
+                    {
+                        datapar_loop_step_ind<InIter>::callv(f, first);
+                        --nvec;
+                        len -= size;
+                    }
+
+                    while (len != 0)
                     {
                         datapar_loop_step_ind<InIter>::call1(f, first);
+                        --len;
                     }
                     return first;
                 }

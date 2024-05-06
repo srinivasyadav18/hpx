@@ -41,8 +41,8 @@ namespace hpx::datapar::experimental {
         std::experimental::simd<T, Abi> const& v_true,
         std::experimental::simd<T, Abi> const& v_false) noexcept
     {
-        std::experimental::simd<T, Abi> v;
-        where(msk, v) = v_true;
+        std::experimental::simd<T, Abi> v(v_true);
+        // where(msk, v) = v_true;
         where(!msk, v) = v_false;
         return v;
     }
